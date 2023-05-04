@@ -1,12 +1,33 @@
 // import { useState } from 'react'
+import React, { useState } from 'react'
 import './App.css'
+import {PaintingPanel, PaintingPanelProps, PanelPosition} from './PaintingPanel';
 
-function App() {
+
+const App: React.FC = () => {
+
+  const [panelPosition, setPanelPosition] = useState<PanelPosition>({
+    zoomPercent: 100,
+    xPercent: 0,
+    yPercent: 0
+  })
 
   const paintingName = 'test';
 
-  const panelOnePainting = [];
-  const panelTwoPainting = [];
+  const panelOneProps: PaintingPanelProps = {
+    paintingName: paintingName,
+    isDiff: false,
+    paintingPos: panelPosition,
+    setPaintingPos: () => setPanelPosition(panelPosition)
+  }
+
+  const panelTwoProps: PaintingPanelProps = {
+    paintingName: paintingName,
+    isDiff: true,
+    paintingPos: panelPosition,
+    setPaintingPos: () => setPanelPosition(panelPosition)
+  }
+
 
   return (
     <>
