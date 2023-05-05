@@ -1,5 +1,36 @@
 .PaintingPanel{
-  height: 80%;
-  width: 45%;
-  background-color: black;
+  height: 95%;
+  width: auto;
+  max-width: 50vw;
+  background-color: rgb(173, 59, 59);
+  overflow: hidden;
+  display: inline-flex;
+}
+
+.PaintingImgContainer{
+  /* width: 40%; */
+  max-width: 100%;
+  max-height: 100%;
+  border: solid black 2px;
+
+}
+
+.PaintingImg{
+  width: 100%;
+  height: 100%;
+}
+
+.PaintingSvg{
+  position: absolute;
+  z-index: 5;
+  top: 0 ;
+  left: 0;
+}
+
+.shape{
+  position: absolute;
+  width: auto;
+  height: auto;
+  top: 0px;
+  left: 0px;
 }

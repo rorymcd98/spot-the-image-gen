@@ -1,3 +1,7 @@
+body{
+  margin: 0;
+}
+
 #panel-container{
   position: absolute;
   transform: translate(-50%, -50%);
@@ -8,10 +12,4 @@
   justify-content: space-around;
   align-items: center;
   background-color: rgb(225, 226, 221);
-}
-
-.PaintingPanel{
-  height: 80%;
-  width: 45%;
-  background-color: black;
 }

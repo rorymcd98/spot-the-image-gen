@@ -1,43 +1,88 @@
 // import { useState } from 'react'
 import React, { useState } from 'react'
 import './App.css'
-import {PaintingPanel, PaintingPanelProps, PanelPosition} from './PaintingPanel';
+import PaintingPanel, {PaintingPanelProps, PaintingPosition} from './PaintingPanel';
 
 
 const App: React.FC = () => {
 
-  const [panelPosition, setPanelPosition] = useState<PanelPosition>({
-    zoomPercent: 100,
-    xPercent: 0,
-    yPercent: 0
+  const [paintingPosition, setPaintingPosition] = useState<PaintingPosition>({
+    zoomRatio: 1,
+    xFraction: 0,
+    yFraction: 0
   })
 
   const paintingName = 'test';
 
+  const zoomPainting = (e: WheelEvent) => {
+    const minZoomRatio = 1.0;
+    const maxZoomRatio = 2.4;
+    
+    const newPaintingPosition = {...paintingPosition}
+
+    const nextZoomRatio = newPaintingPosition.zoomRatio + -e.deltaY/1000;
+
+    newPaintingPosition.zoomRatio = Math.min(Math.max(nextZoomRatio, minZoomRatio), maxZoomRatio)
+
+    setPaintingPosition(newPaintingPosition)
+  }
+
+  function createFollowMouseOnPainting(panelId: string) {
+    return (e: MouseEvent) => {
+      const newPaintingPosition = {...paintingPosition}
+
+      //Containing panel element
+      const paintingPanel: HTMLDivElement = document.getElementById(panelId);
+
+      const rect = paintingPanel.getBoundingClientRect();
+
+      //target element dimensions 
+      const targetWidth = paintingPanel.clientWidth;
+      const targetHeight = paintingPanel.clientHeight;
+
+      newPaintingPosition.xFraction = (e.clientX - rect.left)/targetWidth
+      newPaintingPosition.yFraction = (e.clientY - rect.top)/targetHeight
+
+      setPaintingPosition(newPaintingPosition)
+    }
+  }
+
+  //Translate the position of the mouse to a tranasform value for the painting (linear interpolation)
+  const xTransform = 100*((0.5 - paintingPosition.xFraction) * (1-(1/paintingPosition.zoomRatio)));
+  const yTransform = 100*((0.5 - paintingPosition.yFraction) * (1-(1/paintingPosition.zoomRatio)));
+
+  const paintingImgStyle: React.CSSProperties = {
+    transform: `scale(${paintingPosition.zoomRatio}) translateX(${xTransform}%) translateY(${yTransform}%)`,
+  }
+  
+  console.log(paintingImgStyle)
+
   const panelOneProps: PaintingPanelProps = {
     paintingName: paintingName,
     isDiff: false,
-    paintingPos: panelPosition,
-    setPaintingPos: () => setPanelPosition(panelPosition)
+    paintingImgStyle,
+    zoomPainting,
+    createFollowMouseOnPainting
   }
 
   const panelTwoProps: PaintingPanelProps = {
     paintingName: paintingName,
     isDiff: true,
-    paintingPos: panelPosition,
-    setPaintingPos: () => setPanelPosition(panelPosition)
+    paintingImgStyle,
+    zoomPainting,
+    createFollowMouseOnPainting
   }
+
+  const panelOne = <PaintingPanel {...panelOneProps} />
+  const panelTwo = <PaintingPanel {...panelTwoProps} />
+
 
 
   return (
     <>
     <div id='panel-container'>
-      <span className='PaintingPanel' id='panel-1'>
-        <img src='paintings/test/test.png' />
-      </span>
-      <span className='PaintingPanel' id='panel-2'>
-        <img src='paintings/test/test-diff.png' />
-      </span>
+      {panelOne}
+      {panelTwo}
     </div>
     </>
   )
