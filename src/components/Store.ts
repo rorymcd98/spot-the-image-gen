@@ -9,15 +9,26 @@ type PaintingsProgress = {
 }
 
 export const useProgressStore = create<PaintingsProgress>((set) => ({
-  paintings: {} ,
-  clickedDifference: (paintingId: string, differenceId: string) => set((state) => {
-    const painting = state.paintings[paintingId];
+  paintings: {},
+  clickedDifference: (paintingName: string, differenceId: string) => set((state) => {
+    const painting = state.paintings[paintingName];
     
-    if (painting) {
-      painting[differenceId] = true;
-
+    if (!painting) {
+      state.paintings[paintingName] = {};
     }
-    return {...state};
-  })
+    state.paintings[paintingName][differenceId] = true;
 
+    return {...state};
+  }),
+
+}));
+
+type StyleUpdateState = {
+  updateStyles: boolean;
+  toggleUpdateStyles: () => void;
+};
+
+export const useStyleUpdateStore = create<StyleUpdateState>((set) => ({
+  updateStyles: false,
+  toggleUpdateStyles: () => set((state) => ({ updateStyles: !state.updateStyles })),
 }));

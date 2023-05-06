@@ -7,6 +7,7 @@ name = "pypi"
 opencv-python = "*"
 numpy = "*"
 svgwrite = "*"
+spot-the-image-gen-svgs = {path = "."}
 
 [dev-packages]
 

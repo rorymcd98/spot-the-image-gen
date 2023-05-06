@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "b63c76a6abb8193004c8e68251f636fcf3caaa785ca6bf2d2851e4abafa799fb"
+            "sha256": "63f852a5b49b1e4772f76b6d34eed6c99ca1bf777e3f14bbcc2c16581c9819f4"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -63,6 +63,10 @@
             ],
             "index": "pypi",
             "version": "==4.7.0.72"
+        },
+        "spot-the-image-gen-svgs": {
+            "path": ".",
+            "version": "==0.1.0"
         },
         "svgwrite": {
             "hashes": [

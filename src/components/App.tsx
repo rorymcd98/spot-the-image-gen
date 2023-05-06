@@ -14,7 +14,7 @@ const App: React.FC = () => {
 
   const paintingName = 'test';
 
-  const zoomPainting = (e: WheelEvent) => {
+  const zoomPainting = (e: React.WheelEvent<HTMLSpanElement>): void =>{
     const minZoomRatio = 1.0;
     const maxZoomRatio = 2.4;
     
@@ -28,15 +28,19 @@ const App: React.FC = () => {
   }
 
   function createFollowMouseOnPainting(panelId: string) {
-    return (e: MouseEvent) => {
+    return (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
       const newPaintingPosition = {...paintingPosition}
 
       //Containing panel element
-      const paintingPanel: HTMLDivElement = document.getElementById(panelId);
+      const paintingPanel = document.getElementById(panelId);
+
+      if (!paintingPanel) {
+        return;
+      }
 
       const rect = paintingPanel.getBoundingClientRect();
 
-      //target element dimensions 
+      //Panel element dimensions (un-zoomed painting dimensions)
       const targetWidth = paintingPanel.clientWidth;
       const targetHeight = paintingPanel.clientHeight;
 
@@ -54,8 +58,6 @@ const App: React.FC = () => {
   const paintingImgStyle: React.CSSProperties = {
     transform: `scale(${paintingPosition.zoomRatio}) translateX(${xTransform}%) translateY(${yTransform}%)`,
   }
-  
-  console.log(paintingImgStyle)
 
   const panelOneProps: PaintingPanelProps = {
     paintingName: paintingName,
