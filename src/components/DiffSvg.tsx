@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ReactSVG } from 'react-svg';
 import './DiffSvg.css';
-import { useProgressStore } from './Store';
+import { useProgressStore, useClickCounter } from './Store';
 
 
 export type DiffSvgProps = {
@@ -11,10 +11,10 @@ export type DiffSvgProps = {
 }
 
 export const DiffSvg: React.FC<DiffSvgProps> = ({id, srcPath, paintingName}) => {
-  const {paintings, clickedDifference} = useProgressStore();
+  const {paintings, clickDifference} = useProgressStore();
   const paintingDiffs = paintings[paintingName] ? paintings[paintingName] : {};
 
-  function styleCallback(svg: SVGElement) {
+  const styleCallback = (svg: SVGElement) => {
     const newStyle = "filter: invert(48%);";
 
     Object.keys(paintingDiffs).forEach((diffId) => {
@@ -46,7 +46,19 @@ export const DiffSvg: React.FC<DiffSvgProps> = ({id, srcPath, paintingName}) => 
 
     const pathClassName = target.className.baseVal;
 
-    clickedDifference(paintingName, pathClassName);
+    clickDifference(paintingName, pathClassName);
+  }
+
+  const {clicks, increment} = useClickCounter();
+
+  const countClick = () => {
+    console.log('here')
+    increment();
+  }
+
+  function combineClickHandlers(e: React.MouseEvent) {
+    countClick();
+    correctClickHandler(e);
   }
 
   return (
@@ -54,8 +66,10 @@ export const DiffSvg: React.FC<DiffSvgProps> = ({id, srcPath, paintingName}) => 
       id={id}
       className='DiffSvg'
       src={srcPath}
-      onClick={correctClickHandler}
+      onClick={combineClickHandlers}
       beforeInjection={styleCallback}
     />
   );
 }
+
+

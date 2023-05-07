@@ -1,16 +1,24 @@
 import { create } from "zustand";
+import paintingsJson from "../resources/paintings.json";
+const initialPaintings: {[key: string]: {}} = {};
+
+Object.keys(paintingsJson).forEach((paintingId) => {
+  initialPaintings[paintingId] = {};
+  }
+);
+
 
 
 type PaintingsProgress = {
   paintings: {[key: string]: {
     [key: string]: boolean
   }},
-  clickedDifference: (paintingId: string, differenceId: string) => void,
+  clickDifference: (paintingId: string, differenceId: string) => void,
 }
 
 export const useProgressStore = create<PaintingsProgress>((set) => ({
-  paintings: {},
-  clickedDifference: (paintingName: string, differenceId: string) => set((state) => {
+  paintings: initialPaintings,
+  clickDifference: (paintingName: string, differenceId: string) => set((state) => {
     const painting = state.paintings[paintingName];
     
     if (!painting) {
@@ -23,12 +31,16 @@ export const useProgressStore = create<PaintingsProgress>((set) => ({
 
 }));
 
-type StyleUpdateState = {
-  updateStyles: boolean;
-  toggleUpdateStyles: () => void;
-};
 
-export const useStyleUpdateStore = create<StyleUpdateState>((set) => ({
-  updateStyles: false,
-  toggleUpdateStyles: () => set((state) => ({ updateStyles: !state.updateStyles })),
+
+type ClickCounter = {
+  clicks: number,
+  increment: () => void,
+  reset: () => void,
+}
+
+export const useClickCounter = create<ClickCounter>((set) => ({
+  clicks: 0,
+  increment: () => set((state) => ({ clicks: state.clicks + 1 })),
+  reset: () => set({ clicks: 0 })
 }));

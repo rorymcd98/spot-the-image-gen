@@ -1,7 +1,7 @@
 import React from 'react'
 import './PaintingPanel.css'
-import diffsMeta from '../assets/differences/diffs-meta.json'
 import { DiffSvg } from './DiffSvg';
+import { useClickCounter } from './Store';
 
 export type PaintingPosition = {
   zoomRatio: number;
@@ -22,9 +22,7 @@ const PaintingPanel: React.FC<PaintingPanelProps> = ({paintingName, isDiff, pain
   const panelId = isDiff ? 'panel-2' : 'panel-1';
   const paintingPath = `paintings/${paintingName}/${paintingName}${isDiff ? '-diff' : ''}.png`;
 
-  if (diffsMeta == undefined) { console.log('POBEMS!')}
-
-  const diffsPath = `./differences/`;
+  const diffsPath = `./diff-svgs/`;
 
   const diffSvg = <DiffSvg 
     key={paintingName + 'diffSvg' + '-' +  panelId}
@@ -45,3 +43,4 @@ const PaintingPanel: React.FC<PaintingPanelProps> = ({paintingName, isDiff, pain
   )
 }
 export default PaintingPanel;
+

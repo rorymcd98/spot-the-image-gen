@@ -2,6 +2,8 @@
 import React, { useState } from 'react'
 import './App.css'
 import PaintingPanel, {PaintingPanelProps, PaintingPosition} from './PaintingPanel';
+import {Counters} from './Counters';
+import {SidePanel} from './SidePanel';
 
 
 const App: React.FC = () => {
@@ -12,7 +14,7 @@ const App: React.FC = () => {
     yFraction: 0
   })
 
-  const paintingName = 'test';
+  const paintingName = 'sunday-afternoon';
 
   const zoomPainting = (e: React.WheelEvent<HTMLSpanElement>): void =>{
     const minZoomRatio = 1.0;
@@ -78,14 +80,16 @@ const App: React.FC = () => {
   const panelOne = <PaintingPanel {...panelOneProps} />
   const panelTwo = <PaintingPanel {...panelTwoProps} />
 
-
+  const counters = <Counters {...{paintingName}} />
 
   return (
     <>
-    <div id='panel-container'>
-      {panelOne}
-      {panelTwo}
-    </div>
+      <div id='panel-container'>
+        {panelOne}
+        {panelTwo}
+      </div>
+      {counters}
+      <SidePanel/>
     </>
   )
 }
