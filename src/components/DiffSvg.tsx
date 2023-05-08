@@ -1,8 +1,10 @@
+/** @jsxImportSource @emotion/react */
 import * as React from 'react';
 import { ReactSVG } from 'react-svg';
-import './DiffSvg.css';
+
 import { useProgressStore, useClickCounter } from './Store';
 
+import styled from '@emotion/styled';
 
 export type DiffSvgProps = {
   id: string,
@@ -49,7 +51,7 @@ export const DiffSvg: React.FC<DiffSvgProps> = ({id, srcPath, paintingName}) => 
     clickDifference(paintingName, pathClassName);
   }
 
-  const {clicks, increment} = useClickCounter();
+  const {increment} = useClickCounter();
 
   const countClick = () => {
     console.log('here')
@@ -61,8 +63,20 @@ export const DiffSvg: React.FC<DiffSvgProps> = ({id, srcPath, paintingName}) => 
     correctClickHandler(e);
   }
 
+  //(dev) Not sure how to deal with this type error
+  const StyledReactSVG = styled(ReactSVG as any)`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+
+  .DiffPath {
+    opacity: 50% !important;
+  }
+`;
+
   return (
-    <ReactSVG
+    <StyledReactSVG
       id={id}
       className='DiffSvg'
       src={srcPath}

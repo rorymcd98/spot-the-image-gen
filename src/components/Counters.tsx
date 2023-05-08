@@ -1,6 +1,13 @@
 import React from 'react'
 import { useProgressStore, useClickCounter } from './Store'
-import './Counters.css'
+import { EuiIcon, EuiText} from "@elastic/eui";
+
+type PaintingsJson = {
+  [key: string]: any;
+};
+import paintingsJsonUntyped from '../resources/paintings.json';
+
+const paintingsJson: PaintingsJson = paintingsJsonUntyped;
 
 type CountersProps = {
   paintingName: string
@@ -8,14 +15,32 @@ type CountersProps = {
 
 export const  Counters: React.FC<CountersProps> = ({paintingName}) => {
   const numDiffsClicked = getDiffClicks(paintingName);
-  const totalNumDiffs = getTotalNumDiffs();
+  const totalNumDiffs = getTotalNumDiffs(paintingName);
   const totalClicks = getTotalClicks();
-  
+
   return (
-    <div className='Counters'>
-      <div className='correctCounter'> Score {numDiffsClicked} / {totalNumDiffs} </div>
-      <div className='totalCounter'> Clicks {totalClicks} </div>
-    </div>
+      <div className='Counters'
+        css={
+          {
+            position: "absolute",
+            display: "inline-flex",
+            flexDirection: "column",
+            textAlign: "justify",
+            top: "0px",
+            right: "0px",
+            width: "auto",
+            paddingInline: "1rem",
+          }
+        }>
+        <EuiText size='m' color='subdued'>
+          <EuiIcon type="bullseye" size="m"/>
+          <span> {numDiffsClicked} / {totalNumDiffs} </span>
+        </EuiText>
+        <EuiText size='m' color='subdued'>
+          <EuiIcon type="shard" size="m"/>
+          <span> {totalClicks} </span>
+        </EuiText>
+      </div>
   )
 }
 
@@ -29,20 +54,12 @@ const getDiffClicks = (paintingName: string): number => {
   return numDiffsClicked;
 }
 
-const getTotalNumDiffs = (): number => {
-  const firstDiffSvg = document.getElementsByClassName('DiffSvg');
-  
-  if(firstDiffSvg.length === 0){
-    return 0;
-  }
 
-  const firstDiffSvgElement = firstDiffSvg[0];
 
-  const diffPaths = firstDiffSvgElement.getElementsByClassName('DiffPath');
+const getTotalNumDiffs = (paintingName: string): number => {
+  const totalDiffs = paintingsJson[paintingName].totalDiffs;
 
-  const numTotal = diffPaths.length;
-
-  return numTotal;
+  return totalDiffs;
 }
 
 const getTotalClicks = (): number => {

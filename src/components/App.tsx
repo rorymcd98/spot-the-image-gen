@@ -1,12 +1,14 @@
-// import { useState } from 'react'
+
 import React, { useState } from 'react'
-import './App.css'
 import PaintingPanel, {PaintingPanelProps, PaintingPosition} from './PaintingPanel';
 import {Counters} from './Counters';
-import {SidePanel} from './SidePanel';
+// import {SidePanel} from './SidePanel';
 
+import { useEuiTheme } from '@elastic/eui';
 
 const App: React.FC = () => {
+
+  const { euiTheme } = useEuiTheme();
 
   const [paintingPosition, setPaintingPosition] = useState<PaintingPosition>({
     zoomRatio: 1,
@@ -82,14 +84,28 @@ const App: React.FC = () => {
 
   const counters = <Counters {...{paintingName}} />
 
+
   return (
     <>
-      <div id='panel-container'>
+      <div 
+        id='panel-container'
+        css={{
+          background: euiTheme.colors.lightShade,
+          position: "absolute",
+          transform: "translate(-50%, -50%)",
+          height: "100%",
+          width: "100%",
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-around",
+          alignItems: "center",
+        }}
+        >
         {panelOne}
         {panelTwo}
       </div>
       {counters}
-      <SidePanel/>
+      {/* <SidePanel/> */}
     </>
   )
 }

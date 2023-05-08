@@ -1,7 +1,9 @@
 import React from 'react'
-import './PaintingPanel.css'
+
 import { DiffSvg } from './DiffSvg';
-import { useClickCounter } from './Store';
+// import { useClickCounter } from './Store';
+
+import { useEuiTheme } from '@elastic/eui';
 
 export type PaintingPosition = {
   zoomRatio: number;
@@ -33,10 +35,43 @@ const PaintingPanel: React.FC<PaintingPanelProps> = ({paintingName, isDiff, pain
 
   const followMouseOnPainting = createFollowMouseOnPainting(panelId);
 
+  const {euiTheme} = useEuiTheme();
+
   return (
-    <span className='PaintingPanel' id={panelId} onWheel={zoomPainting} onMouseMove={followMouseOnPainting}>
-      <div className='PaintingImgContainer' style={paintingImgStyle}>
-        <img className = 'PaintingImg' src={paintingPath} />
+    <span 
+      className='PaintingPanel' 
+      id={panelId} 
+      onWheel={zoomPainting} 
+      onMouseMove={followMouseOnPainting}
+      css ={{
+        height: "auto",
+        maxHeight: "95%",
+        width: "auto",
+        background: euiTheme.colors.darkShade,
+        overflow: "hidden",
+        userSelect: "none"
+    }}>
+      <div 
+        className='PaintingImgContainer'
+        style={paintingImgStyle}
+        css={{
+          maxWidth: "100%",
+          maxHeight: "100%",
+          width: "auto",
+          height: "100%",
+          border: "solid black 2px",
+        }}>
+        <img 
+          className = 'PaintingImg'
+          src={paintingPath}
+          css={{
+            width: "auto",
+            height: "auto",
+          
+            display: "block",
+            maxWidth: "47.5vw",
+          }}
+        />
         {diffSvg}
       </div>
     </span>
