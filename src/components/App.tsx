@@ -2,7 +2,8 @@
 import React, { useState } from 'react'
 import PaintingPanel, {PaintingPanelProps, PaintingPosition} from './PaintingPanel';
 import {Counters} from './Counters';
-// import {SidePanel} from './SidePanel';
+import {SidePanel} from './SidePanel';
+import { EuiCollapsibleNavGroup, EuiPinnableListGroup} from '@elastic/eui';
 
 import { useEuiTheme } from '@elastic/eui';
 
@@ -106,6 +107,31 @@ const App: React.FC = () => {
       </div>
       {counters}
       {/* <SidePanel/> */}
+      <EuiCollapsibleNavGroup
+        title="Kibana"
+        iconType="logoKibana"
+        isCollapsible={true}
+        initialIsOpen={true}
+        style={{
+          position: 'absolute',
+          top: 0,
+          zIndex: 9999,
+          left: 0,
+        }}
+        >
+        <EuiPinnableListGroup
+          aria-label="Kibana"
+          listItems={[
+            { label: 'Discover' },
+            { label: 'Visualize' }
+          ]}
+          onPinClick={() => {}}
+          maxWidth="none"
+          color="subdued"
+          gutterSize="none"
+          size="s"
+        />
+      </EuiCollapsibleNavGroup>
     </>
   )
 }

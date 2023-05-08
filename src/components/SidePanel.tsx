@@ -1,62 +1,78 @@
 import React, { useState } from 'react';
-import { EuiSideNav, htmlIdGenerator } from '@elastic/eui';
+import {
+  EuiCollapsibleNav,
+  EuiButton,
+  EuiTitle,
+  EuiSpacer,
+  EuiText,
+  EuiCode,
+} from '@elastic/eui';
 
 export const SidePanel: React.FC = () => {
-  const [isSideNavOpenOnMobile, setisSideNavOpenOnMobile] = useState(false);
-
-  const toggleOpenOnMobile = () => {
-    setisSideNavOpenOnMobile(!isSideNavOpenOnMobile);
-  };
-
-  const sideNav = [
-    {
-      name: 'Root item',
-      id: htmlIdGenerator('basicExample')(),
-      items: [
-        {
-          name: 'Item with onClick',
-          id: htmlIdGenerator('basicExample')(),
-          onClick: () => {},
-        },
-        {
-          name: 'Item with href',
-          id: htmlIdGenerator('basicExample')(),
-          href: '#/navigation/side-nav',
-        },
-        {
-          name: 'Selected item',
-          id: htmlIdGenerator('basicExample')(),
-          onClick: () => {},
-          isSelected: true,
-        },
-        {
-          name: 'Disabled item',
-          id: htmlIdGenerator('basicExample')(),
-          disabled: true,
-        },
-      ],
-    },
-  ];
+  const [navIsOpen, setNavIsOpen] = useState<boolean>(
+    JSON.parse(
+      String(localStorage.getItem('euiCollapsibleNavExample--isDocked'))
+    ) || false
+  );
+  const [navIsDocked, setNavIsDocked] = useState<boolean>(
+    JSON.parse(
+      String(localStorage.getItem('euiCollapsibleNavExample--isDocked'))
+    ) || false
+  );
 
   return (
-    <EuiSideNav
-      className='SidePanel'
-      heading="Nav heading"
-      toggleOpenOnMobile={() => toggleOpenOnMobile()}
-      isOpenOnMobile={isSideNavOpenOnMobile}
-      style={{ width: 192 }}
-      items={sideNav}
-      css={
-        {
-          position: "absolute",
-          display: "inline-flex",
-          flexDirection: "column",
-          textAlign: "justify",
-          top: "0px",
-          right: "0px",
-          width: "auto",
+    <>
+      <EuiCollapsibleNav
+        isOpen={navIsOpen}
+        isDocked={navIsDocked}
+        size={240}
+        button={
+          <EuiButton onClick={() => setNavIsOpen((isOpen) => !isOpen)}>
+            Toggle nav
+          </EuiButton>
         }
-      }
-    />
+        onClose={() => setNavIsOpen(false)}
+        style={{
+          position: 'absolute',
+          top: 0,
+          zIndex: 9999,
+        }}
+      >
+        <div style={{ padding: 16 }}>
+          <EuiTitle>
+            <h2>I am some nav</h2>
+          </EuiTitle>
+          <EuiSpacer />
+          <EuiText size="s" color="subdued">
+            <p>
+              The docked status is being stored in{' '}
+              <EuiCode>localStorage</EuiCode>.
+            </p>
+          </EuiText>
+          <EuiSpacer />
+          <EuiButton
+            onClick={() => {
+              setNavIsDocked(!navIsDocked);
+              localStorage.setItem(
+                'euiCollapsibleNavExample--isDocked',
+                JSON.stringify(!navIsDocked)
+              );
+            }}
+          >
+            Docked: {navIsDocked ? 'on' : 'off'}
+          </EuiButton>
+        </div>
+      </EuiCollapsibleNav>
+
+      {navIsDocked && (
+        <EuiText size="s" color="subdued">
+          <p>
+            The <EuiCode>button</EuiCode> gets hidden by default when the nav is
+            docked unless you set{' '}
+            <EuiCode language="js">showButtonIfDocked = true</EuiCode>.
+          </p>
+        </EuiText>
+      )}
+    </>
   );
 };
