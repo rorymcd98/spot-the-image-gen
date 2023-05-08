@@ -59,7 +59,7 @@ const PaintingPanel: React.FC<PaintingPanelProps> = ({paintingName, isDiff, pain
           maxHeight: "100%",
           width: "auto",
           height: "100%",
-          border: "solid black 2px",
+          border: euiTheme.border.thin,
         }}>
         <img 
           className = 'PaintingImg'

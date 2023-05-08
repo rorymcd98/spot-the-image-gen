@@ -46,6 +46,17 @@ export const SidePanel: React.FC = () => {
       isOpenOnMobile={isSideNavOpenOnMobile}
       style={{ width: 192 }}
       items={sideNav}
+      css={
+        {
+          position: "absolute",
+          display: "inline-flex",
+          flexDirection: "column",
+          textAlign: "justify",
+          top: "0px",
+          right: "0px",
+          width: "auto",
+        }
+      }
     />
   );
 };

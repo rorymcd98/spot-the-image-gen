@@ -1,5 +1,0 @@
-setup.py
-spot_the_image_gen_svgs.egg-info/PKG-INFO
-spot_the_image_gen_svgs.egg-info/SOURCES.txt
-spot_the_image_gen_svgs.egg-info/dependency_links.txt
-spot_the_image_gen_svgs.egg-info/top_level.txt
