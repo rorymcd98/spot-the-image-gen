@@ -1,10 +1,10 @@
-import React from 'react'
+import React, {useState} from 'react'
 
 import { DiffSvg } from './DiffSvg';
 import { usePaintingNameStore, useProgressStore } from './Store';
-
-import { useEuiTheme } from '@elastic/eui';
-
+import { EuiIcon, EuiPanel, EuiText, useEuiTheme } from '@elastic/eui';
+import { css } from '@emotion/react';
+import paintingsLibrary from '../resources/paintingsLibrary'; 
 
 export type PaintingPosition = {
   zoomRatio: number;
@@ -25,22 +25,64 @@ const PaintingPanel: React.FC<PaintingPanelProps> = ({isDiff, isVertical, painti
   const {euiTheme} = useEuiTheme();
 
   const panelId = isDiff ? 'panel-2' : 'panel-1';
-  const paintingPath = `paintings/${paintingName}/${paintingName}${isDiff ? '-diff' : ''}.png`;
+  const diffPaintingPath = `paintings/${paintingName}/${paintingName}-diff.png`;
+  const normalPaintingPath = `paintings/${paintingName}/${paintingName}.png`;
+  const paintingPath = isDiff ? diffPaintingPath : normalPaintingPath;
 
   const diffsPath = `./diff-svgs/`;
 
-  const diffSvg = <DiffSvg 
-    key={paintingName + 'diffSvg' + '-' +  panelId}
-    id={paintingName + 'diffSvg' + '-' +  panelId} 
-    srcPath={diffsPath  + 'diff-' + paintingName + '.svg'} 
-    paintingName={paintingName}
-  />
+
 
   const followMouseOnPainting = createFollowMouseOnPainting(panelId);
 
-  // const isComplete = paintings[paintingName].isComplete;
 
-  const isComplete = false;
+  //Handle what happens when the painting is complete
+  //The panels appear to merge, main panel becomes toggleable between the 'diff' and ordinary view
+
+  // const isComplete = paintings[paintingName].isComplete;
+  const isComplete = true;
+
+  const diffSvg = <DiffSvg 
+  key={paintingName + 'diffSvg' + '-' +  panelId}
+  id={paintingName + 'diffSvg' + '-' +  panelId} 
+  srcPath={diffsPath  + 'diff-' + paintingName + '.svg'} 
+  paintingName={paintingName}
+  isComplete={isComplete}
+/>
+
+
+  const midPercent = 25;
+  
+  //function of midpoint
+  const transfromPercent = isDiff ? `-${100-midPercent}%` : `${midPercent}%`; 
+  const transformPainting = isComplete ? `translate${isVertical ? 'Y':'X'}(${transfromPercent})` : ''
+
+  const [endPaintingVisible, setEndPaintingVisible] = useState(true);
+
+  const togglePaintingVisible = () => {
+    if (isComplete && !isDiff) {
+      setEndPaintingVisible(!endPaintingVisible);
+    }
+  }
+
+  const paintingInfo = paintingsLibrary[paintingName];
+  const paintingText = [ 
+  <h4 key={'painting-info-name'}>
+    {paintingInfo.name}
+  </h4>,
+
+  <h5 key={'painting-info-artist'}>
+    {paintingInfo.artist}
+  </h5>,
+
+  <p>
+    {paintingInfo.description}
+  </p>,
+
+  <h5 key={'painting-info-time'}>
+    <EuiIcon type='clock'/> Time taken: {useProgressStore.getState().paintings[paintingName].timeSpent_seconds}
+  </h5>,
+]
 
   // (dev) could potentially remake this using Eui components
   return (
@@ -49,19 +91,22 @@ const PaintingPanel: React.FC<PaintingPanelProps> = ({isDiff, isVertical, painti
       id={panelId} 
       onWheel={zoomPainting} 
       onMouseMove={followMouseOnPainting}
+      onClick={togglePaintingVisible}
       css ={{
         height: "auto",
         maxHeight: "95%",
         width: "auto",
         background: euiTheme.colors.darkShade,
-        overflow: "hidden",
+        // overflow: "hidden",
         userSelect: "none",
         border: euiTheme.border.thick,
         borderColor: euiTheme.colors.mediumShade,
 
         transition: "transform 0.5s ease-in-out, opacity 0.5s ease-in-out",
-        transform: isComplete ? `translate${isVertical ? 'Y':'X'}(${isDiff ? '-' : ''}53%)` : '',
-        opacity: isDiff && isComplete ? '0%' : '100%'
+        transform: transformPainting,
+        opacity: isDiff && isComplete ? '0%' : '100%',
+        //Critical css for the end of the game
+        zIndex: isDiff && isComplete ? '0' : '1'
     }}>
       <div 
         className='PaintingImgContainer'
@@ -70,14 +115,62 @@ const PaintingPanel: React.FC<PaintingPanelProps> = ({isDiff, isVertical, painti
           className = 'PaintingImg'
           src={paintingPath}
           css={isVertical ? {
-          
             display: "block",
             maxHeight: "47.5vh",
           } : {
             display: "block",
             maxWidth: "47.5vw"
           }}
+          //Only active at the end of the game
         />
+        {!isDiff && <img 
+          className = 'PaintingImg'
+          src={diffPaintingPath}
+          css={
+          isVertical ? {
+            position: "absolute",
+            top: "0%",
+            display: "block",
+            maxHeight: "47.5vh",
+            opacity: endPaintingVisible ? '0%' : '100%',
+            transition: "opacity 0.5s ease-in-out",
+          } : {
+            position: "absolute",
+            top: "0%",
+            display: "block",
+            maxWidth: "47.5vw",
+            opacity: endPaintingVisible ? '0%' : '100%',
+            transition: "opacity 0.5s ease-in-out",
+          }}
+        />}
+        <EuiPanel
+          css={isVertical ? 
+            css({
+              position: "absolute",
+              bottom: '-'+euiTheme.size.m,
+              transform: "translateY(100%)",
+              width: "100%",
+              height: "auto",
+  
+            }) :
+            css({
+            position: "absolute",
+            top: "0%",
+            right: '-'+euiTheme.size.m,
+            transform: "translateX(100%)",
+            width: "15vw",
+            height: "100%",
+
+            display: "flex",
+            alignItems: "center",
+          }) 
+        }
+        >
+          <EuiText>
+            {paintingText}
+          </EuiText>
+        </EuiPanel>
+          
         {diffSvg}
       </div>
     </span>

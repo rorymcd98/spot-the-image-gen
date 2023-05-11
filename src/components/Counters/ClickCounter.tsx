@@ -23,7 +23,7 @@ export const  ClickCounter: React.FC = () => {
 const getDiffClicks = (paintingName: string): number => {
   const {paintings} = useProgressStore();
 
-  const paintingDiffs = paintings[paintingName] ? paintings[paintingName] : {};
+  const paintingDiffs = paintings[paintingName].differenceIds ? paintings[paintingName].differenceIds : {};
 
   const numDiffsClicked = Object.keys(paintingDiffs).length;
 

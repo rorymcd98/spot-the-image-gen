@@ -9,10 +9,11 @@ import styled from '@emotion/styled';
 export type DiffSvgProps = {
   id: string,
   srcPath: string,
-  paintingName: string
+  paintingName: string,
+  isComplete?: boolean
 }
 
-export const DiffSvg: React.FC<DiffSvgProps> = ({id, srcPath, paintingName}) => {
+export const DiffSvg: React.FC<DiffSvgProps> = ({id, srcPath, paintingName, isComplete}) => {
   const {paintings, clickDifference} = useProgressStore();
   const paintingDiffs = paintings[paintingName].differenceIds ? paintings[paintingName].differenceIds : {};
 
@@ -53,14 +54,17 @@ export const DiffSvg: React.FC<DiffSvgProps> = ({id, srcPath, paintingName}) => 
 
   const {increment} = useClickCounterStore();
 
+  //(dev) Currently unused
   const countClick = () => {
-    console.log('here')
     increment();
   }
 
   function combineClickHandlers(e: React.MouseEvent) {
     countClick();
-    correctClickHandler(e);
+    if(!isComplete){
+      correctClickHandler(e);
+
+    }
   }
 
   //(dev) Not sure how to deal with this type error
