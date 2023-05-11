@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { ReactSVG } from 'react-svg';
 
-import { useProgressStore, useClickCounter } from './Store';
+import { useProgressStore, useClickCounterStore } from './Store';
 
 import styled from '@emotion/styled';
 
@@ -14,7 +14,7 @@ export type DiffSvgProps = {
 
 export const DiffSvg: React.FC<DiffSvgProps> = ({id, srcPath, paintingName}) => {
   const {paintings, clickDifference} = useProgressStore();
-  const paintingDiffs = paintings[paintingName] ? paintings[paintingName] : {};
+  const paintingDiffs = paintings[paintingName].differenceIds ? paintings[paintingName].differenceIds : {};
 
   const styleCallback = (svg: SVGElement) => {
     const newStyle = "filter: invert(48%);";
@@ -51,7 +51,7 @@ export const DiffSvg: React.FC<DiffSvgProps> = ({id, srcPath, paintingName}) => 
     clickDifference(paintingName, pathClassName);
   }
 
-  const {increment} = useClickCounter();
+  const {increment} = useClickCounterStore();
 
   const countClick = () => {
     console.log('here')

@@ -1,9 +1,10 @@
 import React from 'react'
 
 import { DiffSvg } from './DiffSvg';
-// import { useClickCounter } from './Store';
+import { usePaintingNameStore, useProgressStore } from './Store';
 
 import { useEuiTheme } from '@elastic/eui';
+
 
 export type PaintingPosition = {
   zoomRatio: number;
@@ -12,14 +13,16 @@ export type PaintingPosition = {
 }
 
 export type PaintingPanelProps = {
-  paintingName: string,
   isDiff: boolean,
+  isVertical: boolean,
   paintingImgStyle: React.CSSProperties,
   zoomPainting: (e: React.WheelEvent<HTMLSpanElement>) => void,
   createFollowMouseOnPainting: (panelId: string) => (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => void,
 }
 
-const PaintingPanel: React.FC<PaintingPanelProps> = ({paintingName, isDiff, paintingImgStyle, zoomPainting, createFollowMouseOnPainting}) => {
+const PaintingPanel: React.FC<PaintingPanelProps> = ({isDiff, isVertical, paintingImgStyle, zoomPainting, createFollowMouseOnPainting}) => {
+  const {paintingName} = usePaintingNameStore();
+  const {euiTheme} = useEuiTheme();
 
   const panelId = isDiff ? 'panel-2' : 'panel-1';
   const paintingPath = `paintings/${paintingName}/${paintingName}${isDiff ? '-diff' : ''}.png`;
@@ -35,8 +38,11 @@ const PaintingPanel: React.FC<PaintingPanelProps> = ({paintingName, isDiff, pain
 
   const followMouseOnPainting = createFollowMouseOnPainting(panelId);
 
-  const {euiTheme} = useEuiTheme();
+  // const isComplete = paintings[paintingName].isComplete;
 
+  const isComplete = false;
+
+  // (dev) could potentially remake this using Eui components
   return (
     <span 
       className='PaintingPanel' 
@@ -49,27 +55,27 @@ const PaintingPanel: React.FC<PaintingPanelProps> = ({paintingName, isDiff, pain
         width: "auto",
         background: euiTheme.colors.darkShade,
         overflow: "hidden",
-        userSelect: "none"
+        userSelect: "none",
+        border: euiTheme.border.thick,
+        borderColor: euiTheme.colors.mediumShade,
+
+        transition: "transform 0.5s ease-in-out, opacity 0.5s ease-in-out",
+        transform: isComplete ? `translate${isVertical ? 'Y':'X'}(${isDiff ? '-' : ''}53%)` : '',
+        opacity: isDiff && isComplete ? '0%' : '100%'
     }}>
       <div 
         className='PaintingImgContainer'
-        style={paintingImgStyle}
-        css={{
-          maxWidth: "100%",
-          maxHeight: "100%",
-          width: "auto",
-          height: "100%",
-          border: euiTheme.border.thin,
-        }}>
+        style={paintingImgStyle}>
         <img 
           className = 'PaintingImg'
           src={paintingPath}
-          css={{
-            width: "auto",
-            height: "auto",
+          css={isVertical ? {
           
             display: "block",
-            maxWidth: "47.5vw",
+            maxHeight: "47.5vh",
+          } : {
+            display: "block",
+            maxWidth: "47.5vw"
           }}
         />
         {diffSvg}

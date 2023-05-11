@@ -1,78 +1,158 @@
 import React, { useState } from 'react';
-import {
-  EuiCollapsibleNav,
-  EuiButton,
-  EuiTitle,
-  EuiSpacer,
-  EuiText,
-  EuiCode,
-} from '@elastic/eui';
+import { EuiButtonEmpty, EuiIcon, EuiSideNav, slugify, useEuiTheme, EuiText} from '@elastic/eui';
+import paintingLibrary, {PaintingLibrary} from '../resources/paintingsLibrary';
+import { usePaintingNameStore } from './Store';
 
-export const SidePanel: React.FC = () => {
-  const [navIsOpen, setNavIsOpen] = useState<boolean>(
-    JSON.parse(
-      String(localStorage.getItem('euiCollapsibleNavExample--isDocked'))
-    ) || false
-  );
-  const [navIsDocked, setNavIsDocked] = useState<boolean>(
-    JSON.parse(
-      String(localStorage.getItem('euiCollapsibleNavExample--isDocked'))
-    ) || false
-  );
+export const SidePanel: React.FC =  () => {
+  const {euiTheme} = useEuiTheme();
+  
+  const [isNavOpenOnDesktop, setIsNavOpenOnDesktop] = useState(false);
+  const [isSideNavOpenOnMobile, setIsSideNavOpenOnMobile] = useState(false);
+  const [selectedItemName, setSelectedItem] = useState('Paintings');
+
+  const toggleOpenOnMobile = () => {
+    setIsSideNavOpenOnMobile(!isSideNavOpenOnMobile);
+  };
+
+  const toggleSelectedItem = (name: string) => {
+    if (selectedItemName === name) {
+      setSelectedItem('None');
+    } else {
+      setSelectedItem(name);
+    }
+  };
+
+  type ItemData = {style?:{}}
+
+  //(dev) try get rid of any
+  const createItem = (name: string, data: (ItemData | any) = {} ) => {
+    let baseCss = {
+      color: euiTheme.colors.text,
+    };
+
+    if (data.style) {
+      baseCss = {
+        ...baseCss,
+        ...data.style,
+      }
+    }
+  
+    return {
+      id: slugify(name),
+      name,
+      isSelected: selectedItemName === name,
+      onClick: () => toggleSelectedItem(name),
+      ...data,
+      css: {
+        ...baseCss,
+      },
+    };
+  };
+
+  const {paintingName, setPaintingName} = usePaintingNameStore();
+  
+  const createPaintingItemList = (paintingLibrary: PaintingLibrary) => {
+    const paintingsList = [];
+    for (const paintingName in paintingLibrary) {
+      const fullPaintingName = paintingLibrary[paintingName].name;
+      paintingsList.push(
+        createItem(fullPaintingName,
+        {
+          onClick: () => {
+            setPaintingName(paintingName);
+          },
+          disabled: paintingName === paintingName,
+        }
+      ));
+    }
+    return paintingsList;
+  };
+
+  const paintingItemList = createPaintingItemList(paintingLibrary);
+
+  let sideNav = [
+    createItem('Paintings', {
+      onClick: () => toggleSelectedItem('Paintings'),
+      icon: <EuiIcon type="image" color='text'/>,
+      items: selectedItemName == 'Paintings' ? paintingItemList : [],
+    }),
+    createItem('Settings', {
+      onClick: () => toggleSelectedItem('Settings'), 
+      icon: <EuiIcon type="gear"/>,
+      items: [
+        createItem('Dark Mode', {
+          onClick: () => {
+            console.log('(DEV) try implement a dark theme toggle here')
+          },
+          icon: <EuiIcon type="moon"/>,
+        }),
+        createItem('Reset progress', {
+          onClick: () => {
+            console.log('not implemented')
+          },
+          icon: <EuiIcon type="refresh"/>,
+        })
+      ],
+    }),
+    createItem('About', {
+      href: 'https://example.com/about',
+      icon: <EuiIcon type="questionInCircle"/>,
+    }),
+  ];
+
+
+
+  let width = isNavOpenOnDesktop ? '30rem' : '0rem';
+
+  const toggleIsNavOpenOnDesktop = () => {
+    setIsNavOpenOnDesktop(!isNavOpenOnDesktop);
+  };
+
+  sideNav = isNavOpenOnDesktop ? sideNav : []
+
+  const transitionModifier = '0.2s ease-out';
+
+
 
   return (
     <>
-      <EuiCollapsibleNav
-        isOpen={navIsOpen}
-        isDocked={navIsDocked}
-        size={240}
-        button={
-          <EuiButton onClick={() => setNavIsOpen((isOpen) => !isOpen)}>
-            Toggle nav
-          </EuiButton>
-        }
-        onClose={() => setNavIsOpen(false)}
+      <EuiSideNav
+        aria-label="Complex example"
+        mobileTitle="Navigate within $APP_NAME"
+        toggleOpenOnMobile={toggleOpenOnMobile}
+        isOpenOnMobile={isSideNavOpenOnMobile}
+        items={sideNav}
+        
+        style={{
+          width: width,
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          height: '100%',
+          paddingLeft: euiTheme.size.s,
+          color: euiTheme.colors.text,
+          
+          backgroundImage: `linear-gradient(to right, ${euiTheme.colors.lightestShade} , transparent)`,
+          transition: 'width ' + transitionModifier
+        }}
+      />
+      
+      <EuiButtonEmpty
+        iconType={isNavOpenOnDesktop ? 'menuLeft' : 'menuRight'}
+
         style={{
           position: 'absolute',
           top: 0,
-          zIndex: 9999,
+          left: width,
+          transition: 'left ' + transitionModifier,
+          color: euiTheme.colors.darkestShade,
+          paddingLeft: euiTheme.size.s
         }}
-      >
-        <div style={{ padding: 16 }}>
-          <EuiTitle>
-            <h2>I am some nav</h2>
-          </EuiTitle>
-          <EuiSpacer />
-          <EuiText size="s" color="subdued">
-            <p>
-              The docked status is being stored in{' '}
-              <EuiCode>localStorage</EuiCode>.
-            </p>
-          </EuiText>
-          <EuiSpacer />
-          <EuiButton
-            onClick={() => {
-              setNavIsDocked(!navIsDocked);
-              localStorage.setItem(
-                'euiCollapsibleNavExample--isDocked',
-                JSON.stringify(!navIsDocked)
-              );
-            }}
-          >
-            Docked: {navIsDocked ? 'on' : 'off'}
-          </EuiButton>
-        </div>
-      </EuiCollapsibleNav>
-
-      {navIsDocked && (
-        <EuiText size="s" color="subdued">
-          <p>
-            The <EuiCode>button</EuiCode> gets hidden by default when the nav is
-            docked unless you set{' '}
-            <EuiCode language="js">showButtonIfDocked = true</EuiCode>.
-          </p>
-        </EuiText>
-      )}
+        onClick={toggleIsNavOpenOnDesktop}
+        flush="both"
+        color={"text"}
+      />
     </>
+    
   );
 };

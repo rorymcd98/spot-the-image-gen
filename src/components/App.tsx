@@ -1,23 +1,22 @@
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PaintingPanel, {PaintingPanelProps, PaintingPosition} from './PaintingPanel';
-import {Counters} from './Counters';
-// import {SidePanel} from './SidePanel';
-import { EuiCollapsibleNavGroup, EuiPinnableListGroup} from '@elastic/eui';
+import {Counters} from './Counters/Counters';
+import {SidePanel} from './SidePanel';
 
-import { useEuiTheme } from '@elastic/eui';
+import { usePaintingNameStore} from './Store';
+import paintingsLibrary from '../resources/paintingsLibrary';
+import { EuiFlexGroup, useEuiTheme } from '@elastic/eui';
+import { css } from '@emotion/react';
 
 const App: React.FC = () => {
-
   const { euiTheme } = useEuiTheme();
-
   const [paintingPosition, setPaintingPosition] = useState<PaintingPosition>({
     zoomRatio: 1,
     xFraction: 0,
     yFraction: 0
   })
-
-  const paintingName = 'sunday-afternoon';
+  const {paintingName} = usePaintingNameStore();
 
   const zoomPainting = (e: React.WheelEvent<HTMLSpanElement>): void =>{
     const minZoomRatio = 1.0;
@@ -64,17 +63,44 @@ const App: React.FC = () => {
     transform: `scale(${paintingPosition.zoomRatio}) translateX(${xTransform}%) translateY(${yTransform}%)`,
   }
 
+  const counters = <Counters/>
+
+  const paintingAspectRatio = paintingsLibrary[paintingName].aspectRatio;
+  const [windowAspectRatio, setWindowAspectRatio] = useState(window.innerWidth / window.innerHeight);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowAspectRatio(window.innerWidth / window.innerHeight);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    // Clean up the event listener when the component is unmounted
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []); // Empty dependency array ensures the effect only runs once on mount and unmount
+
+
+
+  const calulateIsVertical = (paintingAspectRatio: number, windowAspectRatio: number): boolean => {
+    
+    return paintingAspectRatio > windowAspectRatio;
+  }
+
+  const isVertical = calulateIsVertical(paintingAspectRatio, windowAspectRatio);
+
   const panelOneProps: PaintingPanelProps = {
-    paintingName: paintingName,
     isDiff: false,
+    isVertical,
     paintingImgStyle,
     zoomPainting,
     createFollowMouseOnPainting
   }
 
   const panelTwoProps: PaintingPanelProps = {
-    paintingName: paintingName,
     isDiff: true,
+    isVertical,
     paintingImgStyle,
     zoomPainting,
     createFollowMouseOnPainting
@@ -83,30 +109,36 @@ const App: React.FC = () => {
   const panelOne = <PaintingPanel {...panelOneProps} />
   const panelTwo = <PaintingPanel {...panelTwoProps} />
 
-  const counters = <Counters {...{paintingName}} />
-
-
   return (
     <>
-      <div 
-        id='panel-container'
-        css={{
-          background: euiTheme.colors.lightShade,
+      <EuiFlexGroup
+        id='main-container'
+        justifyContent='center'
+        alignItems='center'
+        css={css({
+          background: euiTheme.colors.lightestShade,
           position: "absolute",
           transform: "translate(-50%, -50%)",
           height: "100%",
           width: "100%",
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-around",
-          alignItems: "center",
-        }}
-        >
-        {panelOne}
-        {panelTwo}
-      </div>
+        })}
+      >
+        <EuiFlexGroup 
+          id='panel-container'
+          direction={isVertical ? 'column' : 'row'}
+          justifyContent='spaceAround'
+          alignItems='center'
+          css={css({
+            width: "100%",
+            height: "100%"
+          })}
+          >
+          {panelOne}
+          {panelTwo}
+        </EuiFlexGroup>
+      </EuiFlexGroup>
       {counters}
-      {/* <SidePanel/> */}
+      <SidePanel/>
     </>
   )
 }
