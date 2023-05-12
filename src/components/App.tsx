@@ -137,7 +137,7 @@ const App: React.FC = () => {
         </EuiFlexGroup>
       </EuiFlexGroup>
       {counters}
-      <SidePanel isVertical={isVertical}/>
+      <SidePanel/>
     </>
   )
 }

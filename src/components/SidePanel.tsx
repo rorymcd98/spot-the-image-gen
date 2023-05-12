@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { EuiButtonEmpty, EuiIcon, EuiSideNav, slugify, useEuiTheme, EuiText} from '@elastic/eui';
+import { EuiButtonEmpty, EuiIcon, EuiSideNav, slugify, useEuiTheme} from '@elastic/eui';
 import paintingLibrary, {PaintingLibrary} from '../resources/paintingsLibrary';
 import { usePaintingNameStore } from './Store';
 

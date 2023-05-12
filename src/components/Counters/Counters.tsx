@@ -1,5 +1,5 @@
 import React from 'react'
-import { EuiIcon, EuiText, EuiFlexGroup, useEuiTheme} from "@elastic/eui";
+import { EuiFlexGroup, useEuiTheme} from "@elastic/eui";
 import { css } from '@emotion/react'
 import {ClickCounter} from './ClickCounter'
 import {ClockCounter} from './ClockCounter'
