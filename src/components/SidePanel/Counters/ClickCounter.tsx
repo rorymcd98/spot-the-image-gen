@@ -1,8 +1,8 @@
 import React from 'react'
-import { useProgressStore, usePaintingNameStore } from '../Store'
+import { useProgressStore, usePaintingNameStore } from '../../Store'
 import { EuiFlexGroup, EuiIcon, EuiText} from "@elastic/eui";
 
-import paintingsLibrary from '../../resources/paintingsLibrary';
+import paintingsLibrary from '../../../resources/paintingsLibrary';
 
 export const  ClickCounter: React.FC = () => {
   const {paintingName} = usePaintingNameStore();

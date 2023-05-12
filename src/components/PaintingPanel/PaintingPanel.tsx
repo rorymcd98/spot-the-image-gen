@@ -1,10 +1,10 @@
 import React, {useState} from 'react'
 
 import { DiffSvg } from './DiffSvg';
-import { usePaintingNameStore, useProgressStore } from './Store';
+import { usePaintingNameStore, useProgressStore } from '../Store';
 import { EuiIcon, EuiPanel, EuiText, useEuiTheme } from '@elastic/eui';
 import { css } from '@emotion/react';
-import paintingsLibrary from '../resources/paintingsLibrary'; 
+import paintingsLibrary from '../../resources/paintingsLibrary'; 
 
 export type PaintingPosition = {
   zoomRatio: number;

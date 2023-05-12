@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { EuiButtonEmpty, EuiIcon, EuiSideNav, slugify, useEuiTheme} from '@elastic/eui';
-import paintingLibrary, {PaintingLibrary} from '../resources/paintingsLibrary';
-import { usePaintingNameStore } from './Store';
+import paintingLibrary, {PaintingLibrary} from '../../resources/paintingsLibrary';
+import { usePaintingNameStore } from '../Store';
 
 export const SidePanel: React.FC =  () => {
   const {euiTheme} = useEuiTheme();

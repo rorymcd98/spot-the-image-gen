@@ -81,3 +81,13 @@ export const usePaintingNameStore = create<PaintingNameStore>((set) => ({
   paintingName: 'sunday-afternoon',
   setPaintingName: (newPaintingName) => set(() => ({ paintingName: newPaintingName })),
 }));
+
+type ThemeStore = {
+  theme: string,
+  toggleTheme: () => void,
+}
+
+export const useThemeStore = create<ThemeStore>((set) => ({
+  theme: 'dark',
+  toggleTheme: () => set((state) => ({ theme: state.theme === 'light' ? 'dark' : 'light' })),
+}));

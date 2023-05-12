@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { ReactSVG } from 'react-svg';
 
-import { useProgressStore, useClickCounterStore } from './Store';
+import { useProgressStore, useClickCounterStore } from '../Store';
 
 import styled from '@emotion/styled';
 
@@ -18,13 +18,18 @@ export const DiffSvg: React.FC<DiffSvgProps> = ({id, srcPath, paintingName, isCo
   const paintingDiffs = paintings[paintingName].differenceIds ? paintings[paintingName].differenceIds : {};
 
   const styleCallback = (svg: SVGElement) => {
-    const newStyle = "filter: invert(48%);";
+    const newStyle = `
+      opacity: 30%;
+    `;
 
     Object.keys(paintingDiffs).forEach((diffId) => {
-      const suitableChildren = svg.getElementsByClassName(diffId);
-      for (let i = 0; i < suitableChildren.length; i++) {
-        const child = suitableChildren[i];
-        child.setAttribute('style', newStyle);
+      const suitablePaths = svg.getElementsByClassName(diffId);
+      for (let i = 0; i < suitablePaths.length; i++) {
+        const clickedPath = suitablePaths[i];
+
+        clickedPath.setAttribute('style', newStyle);
+        clickedPath.setAttribute('stroke', 'white')
+        clickedPath.setAttribute('stroke-width', '2')
       }
     })
   }
@@ -54,34 +59,37 @@ export const DiffSvg: React.FC<DiffSvgProps> = ({id, srcPath, paintingName, isCo
 
   const {increment} = useClickCounterStore();
 
-  //(dev) Currently unused
+  //(dev) Currently unused - was going to keep track of number of clicks as a 'score'
   const countClick = () => {
     increment();
   }
 
   function combineClickHandlers(e: React.MouseEvent) {
     countClick();
+
     if(!isComplete){
       correctClickHandler(e);
-
     }
   }
 
-  //(dev) Not sure how to deal with this type error
+//   //(dev) Not sure how to deal with this type error
   const StyledReactSVG = styled(ReactSVG as any)`
   position: absolute;
   width: 100%;
   height: 100%;
   top: 0px;
 
-  .DiffPath {
-    opacity: 0% !important;
-  }
-`;
+  .DiffPath{
+    opacity: 0%;
+    transition: opacity 0.5s;
+    !(dev) Enable this filter if you want to change color.... filter: invert(94%) sepia(22%) saturate(300%) hue-rotate(3deg) brightness(95%) contrast(86%);
+  }`
+
 
   return (
     <StyledReactSVG
       id={id}
+      stroke='yellow'
       className='DiffSvg'
       src={srcPath}
       onClick={combineClickHandlers}

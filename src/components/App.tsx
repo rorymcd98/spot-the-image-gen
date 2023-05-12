@@ -1,8 +1,8 @@
 
 import React, { useEffect, useState } from 'react'
-import PaintingPanel, {PaintingPanelProps, PaintingPosition} from './PaintingPanel';
-import {Counters} from './Counters/Counters';
-import {SidePanel} from './SidePanel';
+import PaintingPanel, {PaintingPanelProps, PaintingPosition} from './PaintingPanel/PaintingPanel';
+import {Counters} from './SidePanel/Counters/Counters';
+import {SidePanel} from './SidePanel/SidePanel';
 
 import { usePaintingNameStore} from './Store';
 import paintingsLibrary from '../resources/paintingsLibrary';
