@@ -5,20 +5,20 @@ import numpy as np
 
 from generate_svg import generate_svg
 
-def generate_composite_diff_masks(directory):
+def generate_composite_diff_masks(prepaint_directory):
     print('Generating composite diff masks...')
 
-    # Create 'out' directory
+    # Create 'out' prepaint_directory
     current_dir = os.getcwd()
     out_dir = os.path.join(current_dir, '..',  'public', 'diff-svgs')
     os.makedirs(out_dir, exist_ok=True)
 
-    for subdir in os.listdir(directory):
+    for subdir in os.listdir(prepaint_directory):
 
         print(f'Processing {subdir}...')
 
         # Skip non-directories
-        subdir_path = os.path.join(directory, subdir)
+        subdir_path = os.path.join(prepaint_directory, subdir)
         if not os.path.isdir(subdir_path):
             continue
 

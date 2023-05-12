@@ -3,17 +3,18 @@ import glob
 from PIL import Image
 import numpy as np
 
-def generate_diff_paintings(directory):
-    for subdir in os.listdir(directory):
+def generate_diff_paintings(prepaint_directory):
+    print('Generating diff paintings...')
+    for subdir in os.listdir(prepaint_directory):
 
         print(f'Processing {subdir}...')
 
         # Skip non-directories
-        subdir_path = os.path.join(directory, subdir)
+        subdir_path = os.path.join(prepaint_directory, subdir)
         if not os.path.isdir(subdir_path):
             continue
         
-        # Create an output directory in the public folder
+        # Create an output prepaint_directory in the public folder
         out_dir = os.path.join(os.getcwd(), '..', 'public', 'paintings', subdir)
         os.makedirs(out_dir, exist_ok=True)
 
@@ -23,7 +24,7 @@ def generate_diff_paintings(directory):
 
         # Create output painting
         output_painting_path = os.path.join(out_dir, f'{subdir}-diff.png')
-
+        output_np = np.array(original)
 
         # Iterate through diff-{letter} and mask-{letter}
         for diff_path in glob.glob(os.path.join(subdir_path, 'diff-*')):
@@ -49,7 +50,7 @@ def generate_diff_paintings(directory):
             diff_np = np.array(diff)
             mask_np = np.array(mask)
             transparent_pixels = (mask_np[..., 3] == 0)
-            output_np = np.array(original)
+            
             output_np[transparent_pixels] = diff_np[transparent_pixels]
             
         output_painting = Image.fromarray(output_np)

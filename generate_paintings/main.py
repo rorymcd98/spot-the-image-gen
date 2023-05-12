@@ -3,8 +3,8 @@ from generate_diff_paintings import generate_diff_paintings
 from copy_original import copy_original
 
 if __name__ == '__main__':
-  directory_name = "./pre-paintings"
+  prepaint_directory = "./pre-paintings"
   
-  generate_composite_diff_masks(directory_name)
-  generate_diff_paintings(directory_name)
-  copy_original(directory_name)
+  generate_composite_diff_masks(prepaint_directory)
+  generate_diff_paintings(prepaint_directory)
+  copy_original(prepaint_directory)
