@@ -6,9 +6,10 @@ import '@elastic/eui/dist/eui_theme_light.css';
 import createCache from '@emotion/cache';
 import { EuiProvider } from '@elastic/eui';
 
+import { useThemeStore } from './components/Store'
+
 //Imports all icons thanks to vite/rollup workaround found by unckleg https://gist.github.com/unckleg/5476ebd940d1d473387bb082e8c2929c
 import importIcons from './resources/cache-icons'
-
 importIcons();
 
 const cache = createCache({
@@ -17,8 +18,16 @@ const cache = createCache({
 });
 cache.compat = true;
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <EuiProvider cache={cache} colorMode='light' >
+const ThemeWrapper: React.FC = () => {
+  const {theme} = useThemeStore();
+  return (
+  <EuiProvider cache={cache} colorMode={theme} css={{transition: 'background 0s linear'}}>
     <App />
   </EuiProvider>
+  )
+}
+
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+  <ThemeWrapper />
 );
+

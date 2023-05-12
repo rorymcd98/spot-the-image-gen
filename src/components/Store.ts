@@ -12,6 +12,7 @@ type PaintingProgress = {
 type PaintingsProgressStore = {
   paintings: {[key: string]: PaintingProgress},
   clickDifference: (paintingId: string, differenceId: string) => void,
+  incrementTime: (paintingName: string) => void,
 }
 
 const initialPaintings: {[key: string]: PaintingProgress} = {};
@@ -32,8 +33,8 @@ export const useProgressStore = create<PaintingsProgressStore>((set) => ({
     
     if (!painting) {
       state.paintings[paintingName] = {
-        'differenceIds': {},
-        'timeSpent_seconds': 0,
+        differenceIds: {},
+        timeSpent_seconds: 0,
         isComplete: false
       };
     }
@@ -42,9 +43,22 @@ export const useProgressStore = create<PaintingsProgressStore>((set) => ({
 
     return {...state};
   }),
+  incrementTime: (paintingName) => set((state) => {
+    const painting = state.paintings[paintingName];
+    
+    if (!painting) {
+      state.paintings[paintingName] = {
+        differenceIds: {},
+        timeSpent_seconds: 0,
+        isComplete: false
+      };
+    }
 
+    state.paintings[paintingName].timeSpent_seconds += 1;
+
+    return {...state};
+  }),
 }));
-
 
 type ClickCounterStore = {
   clicks: number,
@@ -58,20 +72,6 @@ export const useClickCounterStore = create<ClickCounterStore>((set) => ({
   reset: () => set({ clicks: 0 })
 }));
 
-
-type ClockStore = {
-  time_seconds: number,
-  incrementTime: () => void,
-  setTime: (newTime: number) => void,
-}
-
-export const useClockStore = create<ClockStore>((set) => ({
-  time_seconds: 0,
-  incrementTime: () => set((state) => ({ time_seconds: state.time_seconds + 1 })),
-  setTime: (newTime) => set(() => ({ time_seconds: newTime })),
-}));
-
-
 type PaintingNameStore = {
   paintingName: string,
   setPaintingName: (newPaintingName: string) => void,
@@ -83,7 +83,7 @@ export const usePaintingNameStore = create<PaintingNameStore>((set) => ({
 }));
 
 type ThemeStore = {
-  theme: string,
+  theme: 'light' | 'dark',
   toggleTheme: () => void,
 }
 

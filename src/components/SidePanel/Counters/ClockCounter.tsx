@@ -1,13 +1,15 @@
 import React from 'react'
-import { EuiIcon, EuiText, EuiFlexGroup, useEuiTheme} from "@elastic/eui";
-import { useClockStore } from '../../Store';
+import { EuiIcon, EuiText, EuiFlexGroup} from "@elastic/eui";
+import { useProgressStore, usePaintingNameStore } from '../../Store';
 
 export const  ClockCounter: React.FC = () => {
-  const {time_seconds, incrementTime} = useClockStore();
+  const {paintings, incrementTime} = useProgressStore();
+  const {paintingName} = usePaintingNameStore();
+  const time_seconds = paintings[paintingName].timeSpent_seconds;
 
   React.useEffect(() => {
     const interval = setInterval(() => {
-      incrementTime();
+      incrementTime(paintingName);
     }, 1000);
     return () => clearInterval(interval);
   }, []);

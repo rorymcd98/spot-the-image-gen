@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { EuiButtonEmpty, EuiIcon, EuiSideNav, slugify, useEuiTheme} from '@elastic/eui';
 import paintingLibrary, {PaintingLibrary} from '../../resources/paintingsLibrary';
-import { usePaintingNameStore } from '../Store';
+import { usePaintingNameStore, useThemeStore } from '../Store';
 
 export const SidePanel: React.FC =  () => {
   const {euiTheme} = useEuiTheme();
@@ -70,6 +70,9 @@ export const SidePanel: React.FC =  () => {
 
   const paintingItemList = createPaintingItemList(paintingLibrary);
 
+  const {theme, toggleTheme} = useThemeStore();
+
+
   let sideNav = [
     createItem('Paintings', {
       onClick: () => toggleSelectedItem('Paintings'),
@@ -80,11 +83,9 @@ export const SidePanel: React.FC =  () => {
       onClick: () => toggleSelectedItem('Settings'), 
       icon: <EuiIcon type="gear"/>,
       items: [
-        createItem('Dark Mode', {
-          onClick: () => {
-            console.log('(DEV) try implement a dark theme toggle here')
-          },
-          icon: <EuiIcon type="moon"/>,
+        createItem(theme == 'dark' ? 'Light Mode' : 'Dark Mode', {
+          onClick: toggleTheme,
+          icon: theme == 'dark' ? <EuiIcon type="sun"/> : <EuiIcon type="moon"/>,
         }),
         createItem('Reset progress', {
           onClick: () => {
@@ -107,7 +108,6 @@ export const SidePanel: React.FC =  () => {
   };
 
   sideNav = isNavOpenOnDesktop ? sideNav : []
-
   const transitionModifier = '0.2s ease-out';
 
   return (
