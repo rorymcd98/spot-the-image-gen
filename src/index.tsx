@@ -18,7 +18,7 @@ const cache = createCache({
 cache.compat = true;
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <EuiProvider cache={cache} colorMode='dark' >
+  <EuiProvider cache={cache} colorMode='light' >
     <App />
   </EuiProvider>
 );

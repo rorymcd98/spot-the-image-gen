@@ -63,8 +63,6 @@ const App: React.FC = () => {
     transform: `scale(${paintingPosition.zoomRatio}) translateX(${xTransform}%) translateY(${yTransform}%)`,
   }
 
-  const counters = <Counters/>
-
   const paintingAspectRatio = paintingsLibrary[paintingName].aspectRatio;
   const [windowAspectRatio, setWindowAspectRatio] = useState(window.innerWidth / window.innerHeight);
 
@@ -84,7 +82,6 @@ const App: React.FC = () => {
 
 
   const calulateIsVertical = (paintingAspectRatio: number, windowAspectRatio: number): boolean => {
-    
     return paintingAspectRatio > windowAspectRatio;
   }
 
@@ -108,6 +105,8 @@ const App: React.FC = () => {
 
   const panelOne = <PaintingPanel {...panelOneProps} />
   const panelTwo = <PaintingPanel {...panelTwoProps} />
+
+  const counters = <Counters isVertical={isVertical}/>
 
   return (
     <>
@@ -138,7 +137,7 @@ const App: React.FC = () => {
         </EuiFlexGroup>
       </EuiFlexGroup>
       {counters}
-      <SidePanel/>
+      <SidePanel isVertical={isVertical}/>
     </>
   )
 }

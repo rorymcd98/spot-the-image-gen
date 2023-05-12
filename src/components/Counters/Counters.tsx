@@ -4,10 +4,12 @@ import { css } from '@emotion/react'
 import {ClickCounter} from './ClickCounter'
 import {ClockCounter} from './ClockCounter'
 
-export const  Counters: React.FC = () => {
-  const { euiTheme } = useEuiTheme();
+type CountersProps = {
+  isVertical: boolean
+}
 
-  const isVertical = false;
+export const  Counters: React.FC<CountersProps> = ({isVertical}) => {
+  const { euiTheme } = useEuiTheme();
 
   const baseCss = {
     background: euiTheme.colors.mediumShade,

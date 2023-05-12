@@ -40,7 +40,7 @@ const PaintingPanel: React.FC<PaintingPanelProps> = ({isDiff, isVertical, painti
   //The panels appear to merge, main panel becomes toggleable between the 'diff' and ordinary view
 
   // const isComplete = paintings[paintingName].isComplete;
-  const isComplete = true;
+  const isComplete = false;
 
   const diffSvg = <DiffSvg 
   key={paintingName + 'diffSvg' + '-' +  panelId}
@@ -72,10 +72,10 @@ const PaintingPanel: React.FC<PaintingPanelProps> = ({isDiff, isVertical, painti
   </h4>,
 
   <h5 key={'painting-info-artist'}>
-    {paintingInfo.artist}
+    {paintingInfo.artist + ' (' + paintingInfo.year + ')'}
   </h5>,
 
-  <p>
+  <p key={'painting-description'}>
     {paintingInfo.description}
   </p>,
 
@@ -108,42 +108,53 @@ const PaintingPanel: React.FC<PaintingPanelProps> = ({isDiff, isVertical, painti
         //Critical css for the end of the game
         zIndex: isDiff && isComplete ? '0' : '1'
     }}>
-      <div 
-        className='PaintingImgContainer'
-        style={paintingImgStyle}>
-        <img 
-          className = 'PaintingImg'
-          src={paintingPath}
-          css={isVertical ? {
-            display: "block",
-            maxHeight: "47.5vh",
-          } : {
-            display: "block",
-            maxWidth: "47.5vw"
-          }}
-          //Only active at the end of the game
-        />
-        {!isDiff && <img 
-          className = 'PaintingImg'
-          src={diffPaintingPath}
-          css={
-          isVertical ? {
-            position: "absolute",
-            top: "0%",
-            display: "block",
-            maxHeight: "47.5vh",
-            opacity: endPaintingVisible ? '0%' : '100%',
-            transition: "opacity 0.5s ease-in-out",
-          } : {
-            position: "absolute",
-            top: "0%",
-            display: "block",
-            maxWidth: "47.5vw",
-            opacity: endPaintingVisible ? '0%' : '100%',
-            transition: "opacity 0.5s ease-in-out",
-          }}
-        />}
-        <EuiPanel
+      <div
+        css={css({
+          overflow: "hidden",
+        })
+        }
+      >
+        <div 
+          className='PaintingImgContainer'
+          style={paintingImgStyle}>
+          <img 
+            className = 'PaintingImg'
+            src={paintingPath}
+            css={isVertical ? {
+              display: "block",
+              maxHeight: "47.5vh",
+            } : {
+              display: "block",
+              maxWidth: "47.5vw"
+            }}
+            //Only active at the end of the game
+          />
+          {diffSvg}
+          
+          {!isDiff && isComplete && <img 
+            className = 'PaintingImg'
+            src={diffPaintingPath}
+            css={
+            isVertical ? {
+              position: "absolute",
+              top: "0%",
+              display: "block",
+              maxHeight: "47.5vh",
+              opacity: endPaintingVisible ? '0%' : '100%',
+              transition: "opacity 0.5s ease-in-out",
+            } : {
+              position: "absolute",
+              top: "0%",
+              display: "block",
+              maxWidth: "47.5vw",
+              opacity: endPaintingVisible ? '0%' : '100%',
+              transition: "opacity 0.5s ease-in-out",
+            }}
+          />}
+        </div>
+      </div>
+
+      {!isDiff && isComplete && <EuiPanel
           css={isVertical ? 
             css({
               position: "absolute",
@@ -155,24 +166,24 @@ const PaintingPanel: React.FC<PaintingPanelProps> = ({isDiff, isVertical, painti
             }) :
             css({
             position: "absolute",
-            top: "0%",
+            top: "50%",
             right: '-'+euiTheme.size.m,
-            transform: "translateX(100%)",
-            width: "15vw",
-            height: "100%",
+            transform: "translateX(100%) translateY(-50%)",
+            width: "clamp(15vw, 40rem, 30vw)",
+            height: "auto",
 
             display: "flex",
             alignItems: "center",
           }) 
         }
         >
-          <EuiText>
+          <EuiText
+            size= 'm'
+            color='subdued'
+          >
             {paintingText}
           </EuiText>
-        </EuiPanel>
-          
-        {diffSvg}
-      </div>
+        </EuiPanel>}
     </span>
   )
 }

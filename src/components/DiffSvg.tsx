@@ -75,7 +75,7 @@ export const DiffSvg: React.FC<DiffSvgProps> = ({id, srcPath, paintingName, isCo
   top: 0px;
 
   .DiffPath {
-    opacity: 50% !important;
+    opacity: 0% !important;
   }
 `;
 

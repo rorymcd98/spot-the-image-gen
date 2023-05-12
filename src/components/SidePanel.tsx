@@ -49,7 +49,7 @@ export const SidePanel: React.FC =  () => {
     };
   };
 
-  const {paintingName, setPaintingName} = usePaintingNameStore();
+  const {setPaintingName} = usePaintingNameStore();
   
   const createPaintingItemList = (paintingLibrary: PaintingLibrary) => {
     const paintingsList = [];
@@ -100,8 +100,6 @@ export const SidePanel: React.FC =  () => {
     }),
   ];
 
-
-
   let width = isNavOpenOnDesktop ? '30rem' : '0rem';
 
   const toggleIsNavOpenOnDesktop = () => {
@@ -111,8 +109,6 @@ export const SidePanel: React.FC =  () => {
   sideNav = isNavOpenOnDesktop ? sideNav : []
 
   const transitionModifier = '0.2s ease-out';
-
-
 
   return (
     <>
@@ -138,7 +134,6 @@ export const SidePanel: React.FC =  () => {
       />
       
       <EuiButtonEmpty
-        iconType={isNavOpenOnDesktop ? 'menuLeft' : 'menuRight'}
 
         style={{
           position: 'absolute',
@@ -146,12 +141,14 @@ export const SidePanel: React.FC =  () => {
           left: width,
           transition: 'left ' + transitionModifier,
           color: euiTheme.colors.darkestShade,
-          paddingLeft: euiTheme.size.s
+          paddingLeft: euiTheme.size.s,
         }}
         onClick={toggleIsNavOpenOnDesktop}
         flush="both"
         color={"text"}
-      />
+      >
+        <EuiIcon type={isNavOpenOnDesktop ? 'menuLeft' : 'menuRight'} size='l'/>
+      </EuiButtonEmpty>
     </>
     
   );
