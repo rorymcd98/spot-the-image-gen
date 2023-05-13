@@ -63,6 +63,10 @@ const App: React.FC = () => {
     transform: `scale(${paintingPosition.zoomRatio}) translateX(${xTransform}%) translateY(${yTransform}%)`,
   }
 
+  const endGameMaskStyling: React.CSSProperties = {
+    width: `${paintingPosition.xFraction*100}%`,
+  }
+
   const paintingAspectRatio = paintingsLibrary[paintingName].aspectRatio;
   const [windowAspectRatio, setWindowAspectRatio] = useState(window.innerWidth / window.innerHeight);
 
@@ -92,7 +96,8 @@ const App: React.FC = () => {
     isVertical,
     paintingImgStyle,
     zoomPainting,
-    createFollowMouseOnPainting
+    createFollowMouseOnPainting,
+    endGameMaskStyling
   }
 
   const panelTwoProps: PaintingPanelProps = {

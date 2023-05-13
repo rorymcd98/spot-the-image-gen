@@ -16,7 +16,7 @@ export const  ClockCounter: React.FC = () => {
       }
     }, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [paintingName, isComplete]);
 
 
   return (

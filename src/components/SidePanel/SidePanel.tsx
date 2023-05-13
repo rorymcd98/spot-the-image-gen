@@ -52,27 +52,24 @@ export const SidePanel: React.FC =  () => {
   const {paintingName: currentPaintingName, setPaintingName} = usePaintingNameStore();
   const {paintings} = useProgressStore();
 
-  console.log(paintings)
-
-  const isComplete = paintings[currentPaintingName].isComplete;
-
   const createPaintingItemList = (paintingLibrary: PaintingLibrary) => {
     const paintingItemList = [];
 
     for (const paintingName in paintingLibrary) {
+      const paintingIsComplete = paintings[paintingName].isComplete;
       let fullPaintingName = paintingLibrary[paintingName].name;
-      if (isComplete) {
+      if (paintingIsComplete) {
         const completedTime = paintings[paintingName].timeSpent_seconds;
         fullPaintingName += completedTime >= 60 ? ' (' + Math.floor(completedTime/60) + ':' + (completedTime%60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false}) + ')' : ' (' + completedTime + ')';
       }
-      const completeIcon = isComplete ? <EuiIcon type="check" color='success'/> : <EuiIcon type="empty" color='text'/>;
+      const completeIcon = paintingIsComplete ? <EuiIcon type="check" color='success'/> : <EuiIcon type="empty" color='text'/>;
       paintingItemList.push(
         createItem(fullPaintingName,
         {
           onClick: () => {
             setPaintingName(paintingName);
           },
-          disabled: paintingName === 'banana',
+          disabled: paintingName === currentPaintingName,
           icon: completeIcon,
         }
       ));

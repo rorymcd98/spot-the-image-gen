@@ -16,11 +16,12 @@ export type PaintingPanelProps = {
   isDiff: boolean,
   isVertical: boolean,
   paintingImgStyle: React.CSSProperties,
+  endGameMaskStyling?: React.CSSProperties,
   zoomPainting: (e: React.WheelEvent<HTMLSpanElement>) => void,
   createFollowMouseOnPainting: (panelId: string) => (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => void,
 }
 
-const PaintingPanel: React.FC<PaintingPanelProps> = ({isDiff, isVertical, paintingImgStyle, zoomPainting, createFollowMouseOnPainting}) => {
+const PaintingPanel: React.FC<PaintingPanelProps> = ({isDiff, isVertical, paintingImgStyle, endGameMaskStyling, zoomPainting, createFollowMouseOnPainting}) => {
   const {paintingName} = usePaintingNameStore();
   const {euiTheme} = useEuiTheme();
 
@@ -111,7 +112,6 @@ const PaintingPanel: React.FC<PaintingPanelProps> = ({isDiff, isVertical, painti
         maxHeight: "95%",
         width: "auto",
         background: euiTheme.colors.darkShade,
-        // overflow: "hidden",
         userSelect: "none",
         border: euiTheme.border.thick,
         borderColor: euiTheme.colors.mediumShade,
@@ -138,15 +138,30 @@ const PaintingPanel: React.FC<PaintingPanelProps> = ({isDiff, isVertical, painti
             css={isVertical ? {
               display: "block",
               maxHeight: "47.5vh",
+              maxWidth: "95vw",
             } : {
               display: "block",
-              maxWidth: "47.5vw"
+              maxWidth: "47.5vw",
+              maxHeight: "95vh",
             }}
             //Only active at the end of the game
           />
           {diffSvg}
           
-          {!isDiff && isComplete && <img
+          {!isDiff && isComplete && 
+          <div 
+          id='mouse-reveal-container'
+          
+          css={{
+            ...endGameMaskStyling,
+            position: "absolute",
+            top: "0%",
+            display: "block",
+            overflow: "hidden",
+            height: "100%",
+            zIndex: 2,
+          }}>
+             <img
             onClick={togglePaintingVisible}
             className = 'PaintingImg'
             src={diffPaintingPath}
@@ -156,6 +171,7 @@ const PaintingPanel: React.FC<PaintingPanelProps> = ({isDiff, isVertical, painti
               top: "0%",
               display: "block",
               maxHeight: "47.5vh",
+              maxWidth: "95vw",
               opacity: endPaintingVisible ? '100%' : '0%',
               transition: "opacity 0.5s ease-in-out",
             } : {
@@ -163,10 +179,13 @@ const PaintingPanel: React.FC<PaintingPanelProps> = ({isDiff, isVertical, painti
               top: "0%",
               display: "block",
               maxWidth: "47.5vw",
+              maxHeight: "95vh",
               opacity: endPaintingVisible ? '100%' : '0%',
               transition: "opacity 0.5s ease-in-out",
             }}
-          />}
+          />
+          </div>
+         }
         </div>
       </div>
 
