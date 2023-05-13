@@ -9,7 +9,7 @@ import paintingsLibrary from './resources/paintingsLibrary';
 import { EuiFlexGroup, useEuiTheme } from '@elastic/eui';
 import { css } from '@emotion/react';
 
-const App: React.FC = () => {
+const Home: React.FC = () => {
   const { euiTheme } = useEuiTheme();
   const [paintingPosition, setPaintingPosition] = useState<PaintingPosition>({
     zoomRatio: 1,
@@ -147,4 +147,4 @@ const App: React.FC = () => {
   )
 }
 
-export default App
+export default Home
