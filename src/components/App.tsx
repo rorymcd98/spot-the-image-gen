@@ -36,7 +36,7 @@ const App: React.FC = () => {
       const newPaintingPosition = {...paintingPosition}
 
       //Containing panel element
-      const paintingPanel = document.getElementById(panelId);
+      const paintingPanel = document.getElementById(panelId+'-painting');
 
       if (!paintingPanel) {
         return;

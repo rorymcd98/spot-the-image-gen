@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 
 import { DiffSvg } from './DiffSvg';
 import { usePaintingNameStore, useProgressStore } from '../Store';
-import { EuiIcon, EuiPanel, EuiText, useEuiTheme } from '@elastic/eui';
+import { EuiButtonEmpty, EuiIcon, EuiPanel, EuiText, useEuiTheme } from '@elastic/eui';
 import { css } from '@emotion/react';
 import paintingsLibrary from '../../resources/paintingsLibrary'; 
 
@@ -31,16 +31,12 @@ const PaintingPanel: React.FC<PaintingPanelProps> = ({isDiff, isVertical, painti
 
   const diffsPath = `./diff-svgs/`;
 
-
-
   const followMouseOnPainting = createFollowMouseOnPainting(panelId);
-
 
   //Handle what happens when the painting is complete
   //The panels appear to merge, main panel becomes toggleable between the 'diff' and ordinary view
-
-  // const isComplete = paintings[paintingName].isComplete;
-  const isComplete = false;
+  const {paintings, resetPainting} = useProgressStore();
+  const isComplete = paintings[paintingName].isComplete;
 
   const diffSvg = <DiffSvg 
   key={paintingName + 'diffSvg' + '-' +  panelId}
@@ -66,6 +62,8 @@ const PaintingPanel: React.FC<PaintingPanelProps> = ({isDiff, isVertical, painti
   }
 
   const paintingInfo = paintingsLibrary[paintingName];
+  const time = paintings[paintingName].timeSpent_seconds;
+
   const paintingText = [ 
   <h4 key={'painting-info-name'}>
     {paintingInfo.name}
@@ -79,8 +77,25 @@ const PaintingPanel: React.FC<PaintingPanelProps> = ({isDiff, isVertical, painti
     {paintingInfo.description}
   </p>,
 
-  <h5 key={'painting-info-time'}>
-    <EuiIcon type='clock'/> Time taken: {useProgressStore.getState().paintings[paintingName].timeSpent_seconds}
+  <h5 key={'painting-info-time'} >
+    <EuiIcon type='clock'/> Time taken: {time >= 60 ? Math.floor(time/60) + ':' + (time%60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false}) : time}
+    
+    {'  |  '} 
+    <EuiButtonEmpty
+      size="s"
+      iconType="refresh"
+      css={css({
+        color: euiTheme.colors.subduedText,
+        transform: "translateY(50%)"
+      })}
+      onClick={(e: React.MouseEvent)=>{
+        e.stopPropagation();
+        resetPainting(paintingName);
+        // setEndPaintingVisible(false);
+      }}
+    > 
+      Reset
+    </EuiButtonEmpty>
   </h5>,
 ]
 
@@ -91,7 +106,6 @@ const PaintingPanel: React.FC<PaintingPanelProps> = ({isDiff, isVertical, painti
       id={panelId} 
       onWheel={zoomPainting} 
       onMouseMove={followMouseOnPainting}
-      onClick={togglePaintingVisible}
       css ={{
         height: "auto",
         maxHeight: "95%",
@@ -109,6 +123,7 @@ const PaintingPanel: React.FC<PaintingPanelProps> = ({isDiff, isVertical, painti
         zIndex: isDiff && isComplete ? '0' : '1'
     }}>
       <div
+      id={panelId+'-painting'}
         css={css({
           overflow: "hidden",
         })
@@ -131,7 +146,8 @@ const PaintingPanel: React.FC<PaintingPanelProps> = ({isDiff, isVertical, painti
           />
           {diffSvg}
           
-          {!isDiff && isComplete && <img 
+          {!isDiff && isComplete && <img
+            onClick={togglePaintingVisible}
             className = 'PaintingImg'
             src={diffPaintingPath}
             css={
@@ -140,14 +156,14 @@ const PaintingPanel: React.FC<PaintingPanelProps> = ({isDiff, isVertical, painti
               top: "0%",
               display: "block",
               maxHeight: "47.5vh",
-              opacity: endPaintingVisible ? '0%' : '100%',
+              opacity: endPaintingVisible ? '100%' : '0%',
               transition: "opacity 0.5s ease-in-out",
             } : {
               position: "absolute",
               top: "0%",
               display: "block",
               maxWidth: "47.5vw",
-              opacity: endPaintingVisible ? '0%' : '100%',
+              opacity: endPaintingVisible ? '100%' : '0%',
               transition: "opacity 0.5s ease-in-out",
             }}
           />}
@@ -155,35 +171,35 @@ const PaintingPanel: React.FC<PaintingPanelProps> = ({isDiff, isVertical, painti
       </div>
 
       {!isDiff && isComplete && <EuiPanel
-          css={isVertical ? 
-            css({
-              position: "absolute",
-              bottom: '-'+euiTheme.size.m,
-              transform: "translateY(100%)",
-              width: "100%",
-              height: "auto",
-  
-            }) :
-            css({
+        css={isVertical ? 
+          css({
             position: "absolute",
-            top: "50%",
-            right: '-'+euiTheme.size.m,
-            transform: "translateX(100%) translateY(-50%)",
-            width: "clamp(15vw, 40rem, 30vw)",
+            bottom: '-'+euiTheme.size.m,
+            transform: "translateY(100%)",
+            width: "100%",
             height: "auto",
 
-            display: "flex",
-            alignItems: "center",
-          }) 
-        }
+          }) :
+          css({
+          position: "absolute",
+          top: "50%",
+          right: '-'+euiTheme.size.m,
+          transform: "translateX(100%) translateY(-50%)",
+          width: "clamp(15vw, 40rem, 30vw)",
+          height: "auto",
+
+          display: "flex",
+          alignItems: "center",
+        }) 
+      }
+      >
+        <EuiText
+          size= 'm'
+          color='subdued'
         >
-          <EuiText
-            size= 'm'
-            color='subdued'
-          >
-            {paintingText}
-          </EuiText>
-        </EuiPanel>}
+          {paintingText}
+        </EuiText>
+      </EuiPanel>}
     </span>
   )
 }

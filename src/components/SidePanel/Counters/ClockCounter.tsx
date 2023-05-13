@@ -7,9 +7,13 @@ export const  ClockCounter: React.FC = () => {
   const {paintingName} = usePaintingNameStore();
   const time_seconds = paintings[paintingName].timeSpent_seconds;
 
+  const isComplete = paintings[paintingName].isComplete;
+
   React.useEffect(() => {
     const interval = setInterval(() => {
-      incrementTime(paintingName);
+      if (!isComplete) {
+        incrementTime(paintingName);
+      }
     }, 1000);
     return () => clearInterval(interval);
   }, []);

@@ -3,6 +3,7 @@ import { EuiFlexGroup, useEuiTheme} from "@elastic/eui";
 import { css } from '@emotion/react'
 import {ClickCounter} from './ClickCounter'
 import {ClockCounter} from './ClockCounter'
+import { usePaintingNameStore, useProgressStore } from '../../Store';
 
 type CountersProps = {
   isVertical: boolean
@@ -10,10 +11,14 @@ type CountersProps = {
 
 export const  Counters: React.FC<CountersProps> = ({isVertical}) => {
   const { euiTheme } = useEuiTheme();
+  const {paintingName} = usePaintingNameStore();
+  const {paintings} = useProgressStore();
+  const isComplete = paintings[paintingName].isComplete;
 
   const baseCss = {
     background: euiTheme.colors.mediumShade,
     borderRadius: euiTheme.border.radius.medium,
+    opacity: isComplete ? '37%' : '100%',
   }
 
   const verticalCss = css({

@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { ReactSVG } from 'react-svg';
 
-import { useProgressStore, useClickCounterStore } from '../Store';
+import { useProgressStore} from '../Store';
 
 import styled from '@emotion/styled';
 
@@ -10,7 +10,7 @@ export type DiffSvgProps = {
   id: string,
   srcPath: string,
   paintingName: string,
-  isComplete?: boolean
+  isComplete: boolean
 }
 
 export const DiffSvg: React.FC<DiffSvgProps> = ({id, srcPath, paintingName, isComplete}) => {
@@ -35,6 +35,9 @@ export const DiffSvg: React.FC<DiffSvgProps> = ({id, srcPath, paintingName, isCo
   }
 
   const correctClickHandler = (e: React.MouseEvent) => {
+    if(isComplete){
+      return;
+    }
     e.stopPropagation();
 
     const target = e?.target;
@@ -57,27 +60,13 @@ export const DiffSvg: React.FC<DiffSvgProps> = ({id, srcPath, paintingName, isCo
     clickDifference(paintingName, pathClassName);
   }
 
-  const {increment} = useClickCounterStore();
-
-  //(dev) Currently unused - was going to keep track of number of clicks as a 'score'
-  const countClick = () => {
-    increment();
-  }
-
-  function combineClickHandlers(e: React.MouseEvent) {
-    countClick();
-
-    if(!isComplete){
-      correctClickHandler(e);
-    }
-  }
-
 //   //(dev) Not sure how to deal with this type error
   const StyledReactSVG = styled(ReactSVG as any)`
   position: absolute;
   width: 100%;
   height: 100%;
   top: 0px;
+  ${isComplete ? 'opacity: 0%;' : ''}
 
   .DiffPath{
     opacity: 0%;
@@ -92,7 +81,7 @@ export const DiffSvg: React.FC<DiffSvgProps> = ({id, srcPath, paintingName, isCo
       stroke='yellow'
       className='DiffSvg'
       src={srcPath}
-      onClick={combineClickHandlers}
+      onClick={correctClickHandler}
       beforeInjection={styleCallback}
     />
   );
