@@ -1,15 +1,14 @@
 import ReactDOM from 'react-dom/client'
-import App from './components/App.tsx'
+import Home from './pages/Home/Home.tsx'
 import './index.css'
 import '@elastic/eui/dist/eui_theme_light.css';
 
 import createCache from '@emotion/cache';
 import { EuiProvider } from '@elastic/eui';
-
-import { useThemeStore } from './components/Store'
+import { useThemeStore } from './pages/Home/components/Store'
 
 //Imports all icons thanks to vite/rollup workaround found by unckleg https://gist.github.com/unckleg/5476ebd940d1d473387bb082e8c2929c
-import importIcons from './resources/cache-icons'
+import importIcons from './pages/Home/resources/cache-icons.ts'
 importIcons();
 
 const cache = createCache({
@@ -22,7 +21,7 @@ const ThemeWrapper: React.FC = () => {
   const {theme} = useThemeStore();
   return (
   <EuiProvider cache={cache} colorMode={theme} css={{transition: 'background 0s linear'}}>
-    <App />
+    <Home />
   </EuiProvider>
   )
 }

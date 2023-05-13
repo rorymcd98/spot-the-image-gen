@@ -1,11 +1,11 @@
 
 import React, { useEffect, useState } from 'react'
-import PaintingPanel, {PaintingPanelProps, PaintingPosition} from './PaintingPanel/PaintingPanel';
-import {Counters} from './SidePanel/Counters/Counters';
-import {SidePanel} from './SidePanel/SidePanel';
+import PaintingPanel, {PaintingPanelProps, PaintingPosition} from './components/PaintingPanel/PaintingPanel';
+import {Counters} from './components/SidePanel/Counters/Counters';
+import {SidePanel} from './components/SidePanel/SidePanel';
 
-import { usePaintingNameStore} from './Store';
-import paintingsLibrary from '../resources/paintingsLibrary';
+import { usePaintingNameStore} from './components/Store';
+import paintingsLibrary from './resources/paintingsLibrary';
 import { EuiFlexGroup, useEuiTheme } from '@elastic/eui';
 import { css } from '@emotion/react';
 
