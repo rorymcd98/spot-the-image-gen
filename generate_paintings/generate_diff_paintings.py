@@ -37,7 +37,7 @@ def generate_diff_paintings(prepaint_directory):
                 continue
 
             # Open diff and mask
-            diff = Image.open(diff_path).convert('RGB')  # Convert diff to RGB
+            diff = Image.open(diff_path).convert('RGBA')  # Convert diff to RGBA
             mask = Image.open(mask_path)
 
             # Resize images if necessary
@@ -50,8 +50,15 @@ def generate_diff_paintings(prepaint_directory):
             diff_np = np.array(diff)
             mask_np = np.array(mask)
             transparent_pixels = (mask_np[..., 3] == 0)
-            
-            output_np[transparent_pixels] = diff_np[transparent_pixels]
+
+
+            #(dev) chat gpt generated this, I'm not totally sure what's happening
+            if diff_np.shape[2] == 4 and output_np.shape[2] == 4:
+                output_np[transparent_pixels] = diff_np[transparent_pixels]
+            elif diff_np.shape[2] == 4 and output_np.shape[2] == 3:
+                output_np[transparent_pixels] = diff_np[transparent_pixels][..., :3]
+            elif diff_np.shape[2] == 3 and output_np.shape[2] == 4:
+                output_np[transparent_pixels][..., :3] = diff_np[transparent_pixels]
             
         output_painting = Image.fromarray(output_np)
 

@@ -1,6 +1,6 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { EuiIcon, EuiText, EuiFlexGroup} from "@elastic/eui";
-import { useProgressStore, usePaintingNameStore } from '../../Store';
+import { useProgressStore, usePaintingNameStore } from '../../../../../state-management/Store';
 
 export const  ClockCounter: React.FC = () => {
   const {paintings, incrementTime} = useProgressStore();
@@ -9,14 +9,14 @@ export const  ClockCounter: React.FC = () => {
 
   const isComplete = paintings[paintingName].isComplete;
 
-  React.useEffect(() => {
+  useEffect(() => {
     const interval = setInterval(() => {
       if (!isComplete) {
         incrementTime(paintingName);
       }
     }, 1000);
     return () => clearInterval(interval);
-  }, [paintingName, isComplete]);
+  }, [paintingName, isComplete, incrementTime]);
 
 
   return (

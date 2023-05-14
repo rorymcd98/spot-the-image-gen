@@ -3,7 +3,7 @@ import { EuiFlexGroup, useEuiTheme} from "@elastic/eui";
 import { css } from '@emotion/react'
 import {ClickCounter} from './ClickCounter'
 import {ClockCounter} from './ClockCounter'
-import { usePaintingNameStore, useProgressStore } from '../../Store';
+import { usePaintingNameStore, useProgressStore } from '../../../../../state-management/Store';
 
 type CountersProps = {
   isVertical: boolean
@@ -31,24 +31,24 @@ export const  Counters: React.FC<CountersProps> = ({isVertical}) => {
   })
 
   const horizontalCss = css({
-      ...baseCss,
-      position: "absolute",
-      top: "0.5rem",
-      width: "auto",
-      paddingInline: "1rem",
-      transform: "translateX(-50%)",
-    })
+    ...baseCss,
+    position: "absolute",
+    top: "0.5rem",
+    width: "auto",
+    paddingInline: "1rem",
+    transform: "translateX(-50%)",
+  })
 
   return (
-      <EuiFlexGroup className='Counters'
-        direction={isVertical ? 'column' : 'row'}
-        gutterSize='m'
-        justifyContent='center'
+    <EuiFlexGroup className='Counters'
+      direction={isVertical ? 'column' : 'row'}
+      gutterSize='m'
+      justifyContent='center'
 
-        css={isVertical ? verticalCss : horizontalCss}
-        >
-        <ClickCounter/>
-        <ClockCounter/>
-      </EuiFlexGroup>
+      css={isVertical ? verticalCss : horizontalCss}
+    >
+      <ClickCounter/>
+      <ClockCounter/>
+    </EuiFlexGroup>
   )
 }

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { ReactElement, useState } from 'react';
 import { EuiButtonEmpty, EuiIcon, EuiSideNav, slugify, useEuiTheme} from '@elastic/eui';
-import paintingLibrary, {PaintingLibrary} from '../../resources/paintingsLibrary';
-import { usePaintingNameStore, useProgressStore, useThemeStore } from '../Store';
+import paintingLibrary, {PaintingLibrary} from '../../../../resources/paintingsLibrary';
+import { usePaintingNameStore, useProgressStore, useThemeStore } from '../../../../state-management/Store';
 
 export const SidePanel: React.FC =  () => {
   const {euiTheme} = useEuiTheme();
@@ -22,10 +22,24 @@ export const SidePanel: React.FC =  () => {
     }
   };
 
-  type ItemData = {style?:{}}
+  type Item = {
+    id: string
+    name: string
+    isSelected: boolean
+    onClick: () => void
+  }
+
+  type ItemData = {
+    style?: React.CSSProperties
+    icon?: ReactElement
+    disabled?: boolean
+    href?: string
+    items?: Item[]
+    onClick?: () => void
+  }
 
   //(dev) try get rid of any
-  const createItem = (name: string, data: (ItemData | any) = {} ) => {
+  const createItem = (name: string, data: ItemData = {} ) => {
     let baseCss = {
       color: euiTheme.colors.text,
     };
@@ -65,14 +79,14 @@ export const SidePanel: React.FC =  () => {
       const completeIcon = paintingIsComplete ? <EuiIcon type="check" color='success'/> : <EuiIcon type="empty" color='text'/>;
       paintingItemList.push(
         createItem(fullPaintingName,
-        {
-          onClick: () => {
-            setPaintingName(paintingName);
-          },
-          disabled: paintingName === currentPaintingName,
-          icon: completeIcon,
-        }
-      ));
+          {
+            onClick: () => {
+              setPaintingName(paintingName);
+            },
+            disabled: paintingName === currentPaintingName,
+            icon: completeIcon,
+          }
+        ));
     }
     return paintingItemList;
   };
@@ -111,12 +125,12 @@ export const SidePanel: React.FC =  () => {
       ],
     }),
     createItem('About', {
-      href: 'https://example.com/about',
+      href: './about',
       icon: <EuiIcon type="questionInCircle"/>,
     }),
   ];
 
-  let width = isNavOpenOnDesktop ? '35rem' : '0rem';
+  const width = isNavOpenOnDesktop ? '35rem' : '0rem';
 
   const toggleIsNavOpenOnDesktop = () => {
     setIsNavOpenOnDesktop(!isNavOpenOnDesktop);

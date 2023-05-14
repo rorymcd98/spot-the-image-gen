@@ -4,8 +4,8 @@ import PaintingPanel, {PaintingPanelProps, PaintingPosition} from './components/
 import {Counters} from './components/SidePanel/Counters/Counters';
 import {SidePanel} from './components/SidePanel/SidePanel';
 
-import { usePaintingNameStore} from './components/Store';
-import paintingsLibrary from './resources/paintingsLibrary';
+import { usePaintingNameStore} from '../../state-management/Store';
+import paintingsLibrary from '../../resources/paintingsLibrary';
 import { EuiFlexGroup, useEuiTheme } from '@elastic/eui';
 import { css } from '@emotion/react';
 
@@ -16,7 +16,7 @@ const Home: React.FC = () => {
     xFraction: 0,
     yFraction: 0
   })
-  const {paintingName} = usePaintingNameStore();
+  const {paintingName, setPaintingName} = usePaintingNameStore();
 
   const zoomPainting = (e: React.WheelEvent<HTMLSpanElement>): void =>{
     const minZoomRatio = 1.0;
@@ -67,7 +67,14 @@ const Home: React.FC = () => {
     width: `${paintingPosition.xFraction*100}%`,
   }
 
+  //In case we somehow have a undefined painting name we go back to the default
+  if (paintingsLibrary[paintingName] == undefined){
+    setPaintingName('sunday-afternoon');
+  }
+
   const paintingAspectRatio = paintingsLibrary[paintingName].aspectRatio;
+
+
   const [windowAspectRatio, setWindowAspectRatio] = useState(window.innerWidth / window.innerHeight);
 
   useEffect(() => {
@@ -136,7 +143,7 @@ const Home: React.FC = () => {
             width: "100%",
             height: "100%"
           })}
-          >
+        >
           {panelOne}
           {panelTwo}
         </EuiFlexGroup>

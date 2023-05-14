@@ -1,10 +1,10 @@
 import React, {useState} from 'react'
 
 import { DiffSvg } from './DiffSvg';
-import { usePaintingNameStore, useProgressStore } from '../Store';
+import { usePaintingNameStore, useProgressStore } from '../../../../state-management/Store';
 import { EuiButtonEmpty, EuiIcon, EuiPanel, EuiText, useEuiTheme } from '@elastic/eui';
 import { css } from '@emotion/react';
-import paintingsLibrary from '../../resources/paintingsLibrary'; 
+import paintingsLibrary from '../../../../resources/paintingsLibrary'; 
 
 export type PaintingPosition = {
   zoomRatio: number;
@@ -40,12 +40,12 @@ const PaintingPanel: React.FC<PaintingPanelProps> = ({isDiff, isVertical, painti
   const isComplete = paintings[paintingName].isComplete;
 
   const diffSvg = <DiffSvg 
-  key={paintingName + 'diffSvg' + '-' +  panelId}
-  id={paintingName + 'diffSvg' + '-' +  panelId} 
-  srcPath={diffsPath  + 'diff-' + paintingName + '.svg'} 
-  paintingName={paintingName}
-  isComplete={isComplete}
-/>
+    key={paintingName + 'diffSvg' + '-' +  panelId}
+    id={paintingName + 'diffSvg' + '-' +  panelId} 
+    srcPath={diffsPath  + 'diff-' + paintingName + '.svg'} 
+    paintingName={paintingName}
+    isComplete={isComplete}
+  />
 
 
   const midPercent = 25;
@@ -66,39 +66,39 @@ const PaintingPanel: React.FC<PaintingPanelProps> = ({isDiff, isVertical, painti
   const time = paintings[paintingName].timeSpent_seconds;
 
   const paintingText = [ 
-  <h4 key={'painting-info-name'}>
-    {paintingInfo.name}
-  </h4>,
+    <h4 key={'painting-info-name'}>
+      {paintingInfo.name}
+    </h4>,
 
-  <h5 key={'painting-info-artist'}>
-    {paintingInfo.artist + ' (' + paintingInfo.year + ')'}
-  </h5>,
+    <h5 key={'painting-info-artist'}>
+      {paintingInfo.artist + ' (' + paintingInfo.year + ')'}
+    </h5>,
 
-  <p key={'painting-description'}>
-    {paintingInfo.description}
-  </p>,
+    <p key={'painting-description'}>
+      {paintingInfo.description}
+    </p>,
 
-  <h5 key={'painting-info-time'} >
-    <EuiIcon type='clock'/> Time taken: {time >= 60 ? Math.floor(time/60) + ':' + (time%60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false}) : time}
+    <h5 key={'painting-info-time'} >
+      <EuiIcon type='clock'/> Time taken: {time >= 60 ? Math.floor(time/60) + ':' + (time%60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false}) : time}
     
-    {'  |  '} 
-    <EuiButtonEmpty
-      size="s"
-      iconType="refresh"
-      css={css({
-        color: euiTheme.colors.subduedText,
-        transform: "translateY(50%)"
-      })}
-      onClick={(e: React.MouseEvent)=>{
-        e.stopPropagation();
-        resetPainting(paintingName);
+      {'  |  '} 
+      <EuiButtonEmpty
+        size="s"
+        iconType="refresh"
+        css={css({
+          color: euiTheme.colors.subduedText,
+          transform: "translateY(50%)"
+        })}
+        onClick={(e: React.MouseEvent)=>{
+          e.stopPropagation();
+          resetPainting(paintingName);
         // setEndPaintingVisible(false);
-      }}
-    > 
+        }}
+      > 
       Reset
-    </EuiButtonEmpty>
-  </h5>,
-]
+      </EuiButtonEmpty>
+    </h5>,
+  ]
 
   // (dev) could potentially remake this using Eui components
   return (
@@ -121,9 +121,9 @@ const PaintingPanel: React.FC<PaintingPanelProps> = ({isDiff, isVertical, painti
         opacity: isDiff && isComplete ? '0%' : '100%',
         //Critical css for the end of the game
         zIndex: isDiff && isComplete ? '0' : '1'
-    }}>
+      }}>
       <div
-      id={panelId+'-painting'}
+        id={panelId+'-painting'}
         css={css({
           overflow: "hidden",
         })
@@ -150,42 +150,42 @@ const PaintingPanel: React.FC<PaintingPanelProps> = ({isDiff, isVertical, painti
           
           {!isDiff && isComplete && 
           <div 
-          id='mouse-reveal-container'
+            id='mouse-reveal-container'
           
-          css={{
-            ...endGameMaskStyling,
-            position: "absolute",
-            top: "0%",
-            display: "block",
-            overflow: "hidden",
-            height: "100%",
-            zIndex: 2,
-          }}>
-             <img
-            onClick={togglePaintingVisible}
-            className = 'PaintingImg'
-            src={diffPaintingPath}
-            css={
-            isVertical ? {
+            css={{
+              ...endGameMaskStyling,
               position: "absolute",
               top: "0%",
               display: "block",
-              maxHeight: "47.5vh",
-              maxWidth: "95vw",
-              opacity: endPaintingVisible ? '100%' : '0%',
-              transition: "opacity 0.5s ease-in-out",
-            } : {
-              position: "absolute",
-              top: "0%",
-              display: "block",
-              maxWidth: "47.5vw",
-              maxHeight: "95vh",
-              opacity: endPaintingVisible ? '100%' : '0%',
-              transition: "opacity 0.5s ease-in-out",
-            }}
-          />
+              overflow: "hidden",
+              height: "100%",
+              zIndex: 2,
+            }}>
+            <img
+              onClick={togglePaintingVisible}
+              className = 'PaintingImg'
+              src={diffPaintingPath}
+              css={
+                isVertical ? {
+                  position: "absolute",
+                  top: "0%",
+                  display: "block",
+                  maxHeight: "47.5vh",
+                  maxWidth: "95vw",
+                  opacity: endPaintingVisible ? '100%' : '0%',
+                  transition: "opacity 0.5s ease-in-out",
+                } : {
+                  position: "absolute",
+                  top: "0%",
+                  display: "block",
+                  maxWidth: "47.5vw",
+                  maxHeight: "95vh",
+                  opacity: endPaintingVisible ? '100%' : '0%',
+                  transition: "opacity 0.5s ease-in-out",
+                }}
+            />
           </div>
-         }
+          }
         </div>
       </div>
 
@@ -200,17 +200,17 @@ const PaintingPanel: React.FC<PaintingPanelProps> = ({isDiff, isVertical, painti
 
           }) :
           css({
-          position: "absolute",
-          top: "50%",
-          right: '-'+euiTheme.size.m,
-          transform: "translateX(100%) translateY(-50%)",
-          width: "clamp(15vw, 40rem, 30vw)",
-          height: "auto",
+            position: "absolute",
+            top: "50%",
+            right: '-'+euiTheme.size.m,
+            transform: "translateX(100%) translateY(-50%)",
+            width: "clamp(15vw, 40rem, 30vw)",
+            height: "auto",
 
-          display: "flex",
-          alignItems: "center",
-        }) 
-      }
+            display: "flex",
+            alignItems: "center",
+          }) 
+        }
       >
         <EuiText
           size= 'm'

@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { ReactSVG } from 'react-svg';
 
-import { useProgressStore} from '../Store';
+import { useProgressStore} from '../../../../state-management/Store';
 
 import styled from '@emotion/styled';
 
@@ -60,19 +60,33 @@ export const DiffSvg: React.FC<DiffSvgProps> = ({id, srcPath, paintingName, isCo
     clickDifference(paintingName, pathClassName);
   }
 
-//   //(dev) Not sure how to deal with this type error
-  const StyledReactSVG = styled(ReactSVG as any)`
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0px;
-  ${isComplete ? 'opacity: 0%;' : ''}
+  type ReactSvgProps = {
+    id: string,
+    stroke: string,
+    className: string,
+    src: string,
+    onClick: (e: React.MouseEvent) => void,
+    beforeInjection: (svg: SVGElement) => void
+  }
 
-  .DiffPath{
-    opacity: 0%;
-    transition: opacity 0.5s;
-    !(dev) Enable this filter if you want to change color.... filter: invert(94%) sepia(22%) saturate(300%) hue-rotate(3deg) brightness(95%) contrast(86%);
-  }`
+  const ReactSVGWrapper = (props: ReactSvgProps) => {
+    return <ReactSVG {...props} />;
+  };
+
+  //(dev) Not sure how to deal with this type error
+  const StyledReactSVG = styled(ReactSVGWrapper)`
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    ${isComplete ? 'opacity: 0%;' : ''}
+
+    .DiffPath{
+      opacity: 0%;
+      transition: opacity 0.5s;
+      !(dev) Enable this filter if you want to change color.... filter: invert(94%) sepia(22%) saturate(300%) hue-rotate(3deg) brightness(95%) contrast(86%);
+    }`
+
 
 
   return (
