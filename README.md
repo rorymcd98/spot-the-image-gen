@@ -6,7 +6,7 @@ Available at [spot-the-image.web.app](https://spot-the-image.web.app/)
 
 <h2>Preview</h2> 
 
-![Gif of the app in action]([https://i.imgur.com/CkMPAtZ.mp4](https://i.imgur.com/CkMPAtZ.gif))
+![Gif of the app in action](https://i.imgur.com/CkMPAtZ.gif)
 
 Utilises: 
 
