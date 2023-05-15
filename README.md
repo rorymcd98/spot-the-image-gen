@@ -6,7 +6,7 @@ Available at [spot-the-image.web.app](https://spot-the-image.web.app/)
 
 <h2>Preview</h2> 
 
-![Alt Text](https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif)
+[app in action](https://i.imgur.com/FyN4loH.gif)
 
 Utilises: 
 
