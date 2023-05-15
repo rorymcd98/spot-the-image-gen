@@ -52,7 +52,7 @@ def generate_diff_paintings(prepaint_directory):
             transparent_pixels = (mask_np[..., 3] == 0)
 
 
-            #(dev) chat gpt generated this, I'm not totally sure what's happening
+            #(dev) chat gpt generated this, I'm not totally sure what's happening but it works
             if diff_np.shape[2] == 4 and output_np.shape[2] == 4:
                 output_np[transparent_pixels] = diff_np[transparent_pixels]
             elif diff_np.shape[2] == 4 and output_np.shape[2] == 3:
@@ -62,5 +62,10 @@ def generate_diff_paintings(prepaint_directory):
             
         output_painting = Image.fromarray(output_np)
 
-        # Save output painting
+        # Also create a tiny painting for progressive loading
+        tiny_output_painting_path = os.path.join(out_dir, f'{subdir}-diff-tiny.png')
+        tiny_output_painting = output_painting.resize((int(output_painting.size[0]/6), int(output_painting.size[1]/6)))
+
+        # Save output paintings
         output_painting.save(output_painting_path)
+        tiny_output_painting.save(tiny_output_painting_path)

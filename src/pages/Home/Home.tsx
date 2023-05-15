@@ -72,9 +72,8 @@ const Home: React.FC = () => {
     setPaintingName('sunday-afternoon');
   }
 
+  //Here we use aspect ratios to determine whether we should display the paintings vertically or horizontally
   const paintingAspectRatio = paintingsLibrary[paintingName].aspectRatio;
-
-
   const [windowAspectRatio, setWindowAspectRatio] = useState(window.innerWidth / window.innerHeight);
 
   useEffect(() => {

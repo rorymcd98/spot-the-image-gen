@@ -1,10 +1,11 @@
 import React, {useState} from 'react'
+import ProgressiveImage from 'react-progressive-graceful-image';
 
 import { DiffSvg } from './DiffSvg';
 import { usePaintingNameStore, useProgressStore } from '../../../../state-management/Store';
 import { EuiButtonEmpty, EuiIcon, EuiPanel, EuiText, useEuiTheme } from '@elastic/eui';
 import { css } from '@emotion/react';
-import paintingsLibrary from '../../../../resources/paintingsLibrary'; 
+import paintingsLibrary from '../../../../resources/paintingsLibrary';
 
 export type PaintingPosition = {
   zoomRatio: number;
@@ -26,9 +27,15 @@ const PaintingPanel: React.FC<PaintingPanelProps> = ({isDiff, isVertical, painti
   const {euiTheme} = useEuiTheme();
 
   const panelId = isDiff ? 'panel-2' : 'panel-1';
+  
   const diffPaintingPath = `paintings/${paintingName}/${paintingName}-diff.png`;
+  const tinyDiffPaintingPath = `paintings/${paintingName}/${paintingName}-diff-tiny.png`;
+
   const normalPaintingPath = `paintings/${paintingName}/${paintingName}.png`;
+  const tinyNormalPaintingPath = `paintings/${paintingName}/${paintingName}-tiny.png`;
+
   const paintingPath = isDiff ? diffPaintingPath : normalPaintingPath;
+  const tinyPaintingPath = isDiff ? tinyDiffPaintingPath : tinyNormalPaintingPath;
 
   const diffsPath = `./diff-svgs/`;
 
@@ -132,20 +139,35 @@ const PaintingPanel: React.FC<PaintingPanelProps> = ({isDiff, isVertical, painti
         <div 
           className='PaintingImgContainer'
           style={paintingImgStyle}>
-          <img 
-            className = 'PaintingImg'
+          <ProgressiveImage
             src={paintingPath}
-            css={isVertical ? {
-              display: "block",
-              maxHeight: "47.5vh",
-              maxWidth: "95vw",
-            } : {
-              display: "block",
-              maxWidth: "47.5vw",
-              maxHeight: "95vh",
-            }}
-            //Only active at the end of the game
-          />
+            placeholder={tinyPaintingPath}
+          >
+            {(src, loading)=> <img
+              className = 'PaintingImg'
+              src={src}
+              css={isVertical ? {
+                filter: `blur(${loading ? '15' : '0'}px)`,
+                transition : "filter 0.5s ease-in-out",
+                height: "47.5vh",
+
+                maxHeight: "47.5vh",
+                maxWidth: "95vw",
+
+                display: "block",
+              } : {
+                width: "47.5vw",
+
+                maxWidth: "47.5vw",
+                maxHeight: "95vh",
+
+                filter: `blur(${loading ? '15' : '0'}px)`,
+                transition : "filter 0.5s ease-in-out",
+
+                display: "block",
+              }}
+            />}
+          </ProgressiveImage>
           {diffSvg}
           
           {!isDiff && isComplete && 
@@ -161,29 +183,40 @@ const PaintingPanel: React.FC<PaintingPanelProps> = ({isDiff, isVertical, painti
               height: "100%",
               zIndex: 2,
             }}>
-            <img
-              onClick={togglePaintingVisible}
-              className = 'PaintingImg'
+            <ProgressiveImage 
               src={diffPaintingPath}
-              css={
-                isVertical ? {
-                  position: "absolute",
-                  top: "0%",
-                  display: "block",
-                  maxHeight: "47.5vh",
-                  maxWidth: "95vw",
-                  opacity: endPaintingVisible ? '100%' : '0%',
-                  transition: "opacity 0.5s ease-in-out",
-                } : {
-                  position: "absolute",
-                  top: "0%",
-                  display: "block",
-                  maxWidth: "47.5vw",
-                  maxHeight: "95vh",
-                  opacity: endPaintingVisible ? '100%' : '0%',
-                  transition: "opacity 0.5s ease-in-out",
-                }}
-            />
+              placeholder={tinyDiffPaintingPath}
+            >
+              {(src, loading)=> <img
+                src={src}
+                onClick={togglePaintingVisible}
+                className = 'PaintingImg'
+
+                css={
+                  isVertical ? {
+                    position: "absolute",
+                    top: "0%",
+                    display: "block",
+                    height: "47.5vh",
+                    maxHeight: "47.5vh",
+                    maxWidth: "95vw",
+                    opacity: endPaintingVisible ? '100%' : '0%',
+                    transition: "opacity 0.5s ease-in-out, filter 0.5s ease-in-out",
+                    filter: `blur(${loading ? '15' : '0'}px)`,
+                  } : {
+                    position: "absolute",
+                    top: "0%",
+                    display: "block",
+
+                    width: "47.5vw",
+                    maxWidth: "47.5vw",
+                    maxHeight: "95vh",
+                    opacity: endPaintingVisible ? '100%' : '0%',
+                    transition: "opacity 0.5s ease-in-out, filter 0.5s ease-in-out",
+                    filter: `blur(${loading ? '15' : '0'}px)`,
+                  }}
+              />}
+            </ProgressiveImage>
           </div>
           }
         </div>

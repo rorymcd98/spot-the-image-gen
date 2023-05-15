@@ -1,7 +1,7 @@
 import os
-import shutil
+from PIL import Image
 
-def copy_original(original_directory):
+def create_tiny_originals(original_directory):
   for subdir in os.listdir(original_directory):
        
     # Skip non-directories
@@ -13,10 +13,14 @@ def copy_original(original_directory):
     out_dir = os.path.join(os.getcwd(), '..', 'public', 'paintings', subdir)
     os.makedirs(out_dir, exist_ok=True)
 
-    # Copy the original.png to the output file, renaming it to {subdir}.png
+    # Open the original.png
     original_path = os.path.join(subdir_path, 'original.png')
-    output_painting_path = os.path.join(out_dir, f'{subdir}.png')
 
-    # os.system(f'copy {original_path} {output_painting_path}')
-    shutil.copyfile(original_path, output_painting_path)
+    # Create a tiny painting for progressive loading
+    original = Image.open(original_path)
+    tiny_original = original.resize((int(original.size[0]/6), int(original.size[1]/6)))
 
+    output_painting_path = os.path.join(out_dir, f'{subdir}-tiny.png')
+
+    # Save the output painting
+    tiny_original.save(output_painting_path)

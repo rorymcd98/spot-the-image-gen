@@ -76,8 +76,8 @@ export const DiffSvg: React.FC<DiffSvgProps> = ({id, srcPath, paintingName, isCo
   //(dev) Not sure how to deal with this type error
   const StyledReactSVG = styled(ReactSVGWrapper)`
     position: absolute;
-    width: 100%;
-    height: 100%;
+    width: 47.5vw;
+    height: 95vh;
     top: 0px;
     ${isComplete ? 'opacity: 0%;' : ''}
 
