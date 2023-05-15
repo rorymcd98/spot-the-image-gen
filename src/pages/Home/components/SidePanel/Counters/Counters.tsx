@@ -16,7 +16,7 @@ export const  Counters: React.FC<CountersProps> = ({isVertical}) => {
   const isComplete = paintings[paintingName].isComplete;
 
   const baseCss = {
-    background: euiTheme.colors.mediumShade,
+    background: euiTheme.colors.primary,
     borderRadius: euiTheme.border.radius.medium,
     opacity: isComplete ? '37%' : '100%',
   }

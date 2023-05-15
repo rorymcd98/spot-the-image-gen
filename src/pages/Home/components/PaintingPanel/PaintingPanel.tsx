@@ -121,8 +121,8 @@ const PaintingPanel: React.FC<PaintingPanelProps> = ({isDiff, isVertical, painti
         width: "auto",
         background: euiTheme.colors.darkShade,
         userSelect: "none",
-        border: euiTheme.border.thick,
-        borderColor: euiTheme.colors.mediumShade,
+        // boxShadow: "inset 10px 10px 10px 10px rgba(0,0,0,0.75)",
+        boxShadow: "2px 3px 5px 5px rgba(0,0,0,0.25)",
 
         transition: "transform 0.5s ease-in-out, opacity 0.5s ease-in-out",
         transform: transformPainting,
