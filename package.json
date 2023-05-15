@@ -1,12 +1,12 @@
 {
   "name": "spot-the-image-gen",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "licence": "MPL",
   "description": "Spot the difference using generative AI",
   "author": "Rory McDonald",
-  "homepage": "tbd",
+  "homepage": "https://spot-the-image.web.app/",
   "main": "index.tsx",
   "module": "index.tsx",
   "scripts": {

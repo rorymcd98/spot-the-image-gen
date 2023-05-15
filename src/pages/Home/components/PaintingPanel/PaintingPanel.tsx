@@ -22,6 +22,7 @@ export type PaintingPanelProps = {
   createFollowMouseOnPainting: (panelId: string) => (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => void,
 }
 
+//(dev) module is a bit messy, could use some refactoring
 const PaintingPanel: React.FC<PaintingPanelProps> = ({isDiff, isVertical, paintingImgStyle, endGameMaskStyling, zoomPainting, createFollowMouseOnPainting}) => {
   const {paintingName} = usePaintingNameStore();
   const {euiTheme} = useEuiTheme();
@@ -198,6 +199,7 @@ const PaintingPanel: React.FC<PaintingPanelProps> = ({isDiff, isVertical, painti
                     top: "0%",
                     display: "block",
                     height: "47.5vh",
+                    
                     maxHeight: "47.5vh",
                     maxWidth: "95vw",
                     opacity: endPaintingVisible ? '100%' : '0%',

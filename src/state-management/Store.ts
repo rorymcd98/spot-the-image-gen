@@ -143,3 +143,20 @@ export const useThemeStore = create<ThemeStore>()(
       storage: createJSONStorage(() => localStorage),
     })
 );
+
+type KnowsZoomStore = {
+  knowsZoom: boolean,
+  setKnowsZoom: (knowsZoom: boolean) => void,
+}
+
+export const useKnowsZoomStore = create<KnowsZoomStore>()(
+  persist(
+    (set) => ({
+      knowsZoom: false,
+      setKnowsZoom: (knowsZoom) => set(() => ({ knowsZoom })),
+    }),
+    {
+      name: 'knows-zoom',
+      storage: createJSONStorage(() => localStorage),
+    })
+);

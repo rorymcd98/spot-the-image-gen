@@ -4,12 +4,14 @@ import PaintingPanel, {PaintingPanelProps, PaintingPosition} from './components/
 import {Counters} from './components/SidePanel/Counters/Counters';
 import {SidePanel} from './components/SidePanel/SidePanel';
 
-import { usePaintingNameStore} from '../../state-management/Store';
+import { usePaintingNameStore, useKnowsZoomStore} from '../../state-management/Store';
 import paintingsLibrary from '../../resources/paintingsLibrary';
-import { EuiFlexGroup, useEuiTheme } from '@elastic/eui';
+import { EuiCallOut, EuiFlexGroup, useEuiTheme } from '@elastic/eui';
 import { css } from '@emotion/react';
 
 const Home: React.FC = () => {
+  const {knowsZoom, setKnowsZoom} = useKnowsZoomStore();
+
   const { euiTheme } = useEuiTheme();
   const [paintingPosition, setPaintingPosition] = useState<PaintingPosition>({
     zoomRatio: 1,
@@ -21,6 +23,10 @@ const Home: React.FC = () => {
   const zoomPainting = (e: React.WheelEvent<HTMLSpanElement>): void =>{
     const minZoomRatio = 1.0;
     const maxZoomRatio = 2.4;
+
+    if (!knowsZoom) {
+      setKnowsZoom(true);
+    }
     
     const newPaintingPosition = {...paintingPosition}
 
@@ -55,9 +61,20 @@ const Home: React.FC = () => {
     }
   }
 
+  //Effectively means that the mouse stops having an effect near the border (higher value means this regions grows)
+  const xRange = 1.50;
+  const yRange = 1.50;
+
+  const constrain = (value: number): number => {
+    return Math.min(Math.max(value, 0), 1);
+  }
+
+  const xNormalized = constrain(0.5 + xRange*(paintingPosition.xFraction - 0.5));
+  const yNormalized = constrain(0.5 + yRange*(paintingPosition.yFraction - 0.5));
+
   //Translate the position of the mouse to a tranasform value for the painting (linear interpolation)
-  const xTransform = 100*((0.5 - paintingPosition.xFraction) * (1-(1/paintingPosition.zoomRatio)));
-  const yTransform = 100*((0.5 - paintingPosition.yFraction) * (1-(1/paintingPosition.zoomRatio)));
+  const xTransform = 100*((0.5 - xNormalized) * (1-(1/paintingPosition.zoomRatio)));
+  const yTransform = 100*((0.5 - yNormalized) * (1-(1/paintingPosition.zoomRatio)));
 
   const paintingImgStyle: React.CSSProperties = {
     transform: `scale(${paintingPosition.zoomRatio}) translateX(${xTransform}%) translateY(${yTransform}%)`,
@@ -89,14 +106,13 @@ const Home: React.FC = () => {
     };
   }, []); // Empty dependency array ensures the effect only runs once on mount and unmount
 
-
-
   const calulateIsVertical = (paintingAspectRatio: number, windowAspectRatio: number): boolean => {
     return paintingAspectRatio > windowAspectRatio;
   }
 
   const isVertical = calulateIsVertical(paintingAspectRatio, windowAspectRatio);
 
+  //Assemble the panels
   const panelOneProps: PaintingPanelProps = {
     isDiff: false,
     isVertical,
@@ -149,6 +165,17 @@ const Home: React.FC = () => {
       </EuiFlexGroup>
       {counters}
       <SidePanel/>
+      {!knowsZoom && <EuiCallOut
+        size="s"
+        title="Scroll to zoom in."
+        iconType="magnifyWithExclamation"
+        style={{
+          position: "absolute",
+          bottom: euiTheme.size.xs,
+          transform: "translateX(-50%)",
+          zIndex: 100,
+        }}
+      />}
     </>
   )
 }

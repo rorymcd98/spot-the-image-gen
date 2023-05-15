@@ -25,6 +25,10 @@ painting. The motivation for this project was to:
       <li>Explore the use of stable diffusion and other image generators for in-painting.</li>
     </ul>,
     <p>
+      The project is open source and can be found on{' '}
+      <a href="https://github.com/rorymcd98/spot-the-image-gen">Github</a>.
+    </p>,
+    <p>
 This project is licensed under the MPL 2.0 license.
     </p>
   ]
