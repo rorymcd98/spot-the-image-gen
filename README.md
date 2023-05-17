@@ -1,6 +1,6 @@
 <h1 align="center">Spot the Gen</h1>
 
-> An spot the difference game made with React, TypeScript, Elastic UI
+> A spot the difference game using in-painting image generation - made with React, TypeScript, Elastic UI
 
 Available at [spot-the-image.web.app](https://spot-the-image.web.app/)
 
