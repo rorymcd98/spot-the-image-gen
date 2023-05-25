@@ -33,19 +33,19 @@ Utilises:
 
 * Clone this repoistory 
 
-* Install (e.g.): `npm install .`
+* Install (yarn required for ElasticUI): `yarn install`
 
 * For production run:
 
 ```
-npm run build
-npm run start
+yarn build
+yarn start
 ```
 
 * For development run:
 
 ```
-npm run dev
+yarn dev
 ```
 
 <h4>Potential features:</h4> 
