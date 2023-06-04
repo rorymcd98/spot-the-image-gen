@@ -14,12 +14,12 @@ Available at [spot-the-image.web.app](https://spot-the-image.web.app/)
 
 Utilises:
 
--   React
--   Typescript
--   Elastic UI (Components and themes)
--   Zustand (State management)
--   Firebase (Hosting)
--   React router
+- React
+- Typescript
+- Elastic UI (Components and themes)
+- Zustand (State management)
+- Firebase (Hosting)
+- React router
 
 <h2></h2>
 
@@ -27,24 +27,25 @@ Utilises:
 
 <h3>Hosting</h3>
 
--   Install Node.js
+- Install Node.js
 
--   Clone this repoistory
+- Clone this repoistory
 
 <<<<<<< HEAD
--   Install (e.g.): `npm install .`
-=======
-* Install (yarn required for ElasticUI): `yarn install`
->>>>>>> fe638f7b9a41ee26125772db6e3f5d77c3877652
 
--   For production run:
+- # Install (e.g.): `npm install .`
+
+* Install (yarn required for ElasticUI): `yarn install`
+  > > > > > > > fe638f7b9a41ee26125772db6e3f5d77c3877652
+
+- For production run:
 
 ```
 yarn build
 yarn start
 ```
 
--   For development run:
+- For development run:
 
 ```
 yarn dev

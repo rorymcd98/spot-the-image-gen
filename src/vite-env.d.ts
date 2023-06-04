@@ -4,7 +4,7 @@
 import '@emotion/react';
 
 declare module 'react' {
-    interface Attributes {
-        css?: CSSProp<Theme>;
-    }
+  interface Attributes {
+    css?: CSSProp<Theme>;
+  }
 }

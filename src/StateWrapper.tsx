@@ -9,40 +9,40 @@ import About from './pages/About/About';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 const StateWrapper: React.FC = () => {
-    const cache = createCache({
-        key: 'codesandbox',
-        container: document.querySelector(
-            'meta[name="emotion-styles"]'
-        ) as HTMLStyleElement,
-    });
+  const cache = createCache({
+    key: 'codesandbox',
+    container: document.querySelector(
+      'meta[name="emotion-styles"]'
+    ) as HTMLStyleElement,
+  });
 
-    cache.compat = true;
+  cache.compat = true;
 
-    const { theme } = useThemeStore();
+  const { theme } = useThemeStore();
 
-    const routes = [
-        {
-            path: '/',
-            element: <Home />,
-        },
-        {
-            path: '/about',
-            element: <About />,
-        },
-    ];
+  const routes = [
+    {
+      path: '/',
+      element: <Home />,
+    },
+    {
+      path: '/about',
+      element: <About />,
+    },
+  ];
 
-    const router = createBrowserRouter(routes);
-    return (
-        <React.StrictMode>
-            <EuiProvider
-                cache={cache}
-                colorMode={theme}
-                css={{ transition: 'background 0s linear' }}
-            >
-                <RouterProvider router={router} />
-            </EuiProvider>
-        </React.StrictMode>
-    );
+  const router = createBrowserRouter(routes);
+  return (
+    <React.StrictMode>
+      <EuiProvider
+        cache={cache}
+        colorMode={theme}
+        css={{ transition: 'background 0s linear' }}
+      >
+        <RouterProvider router={router} />
+      </EuiProvider>
+    </React.StrictMode>
+  );
 };
 
 export default StateWrapper;

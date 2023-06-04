@@ -8,5 +8,5 @@ import StateWrapper from './StateWrapper.tsx';
 importIcons();
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-    <StateWrapper />
+  <StateWrapper />
 );
