@@ -4,11 +4,8 @@ import {
   EuiIcon,
   EuiShowFor,
   EuiSideNav,
-  EuiThemeBreakpoints,
   slugify,
-  useCurrentEuiBreakpoint,
   useEuiTheme,
-  useIsWithinBreakpoints,
 } from '@elastic/eui';
 import paintingLibrary, {
   PaintingLibrary,
@@ -18,18 +15,12 @@ import {
   useProgressStore,
   useThemeStore,
 } from '../../../../state-management/Store';
-import SidePanelMobileHeader from './SidePanelMobileHeader';
 
 export const SidePanel: React.FC = () => {
   const { euiTheme } = useEuiTheme();
 
   const [isNavOpenOnDesktop, setIsNavOpenOnDesktop] = useState(false);
-  const [isSideNavOpenOnMobile, setIsSideNavOpenOnMobile] = useState(false);
   const [selectedItemName, setSelectedItem] = useState('Paintings');
-
-  const toggleOpenOnMobile = () => {
-    setIsSideNavOpenOnMobile(!isSideNavOpenOnMobile);
-  };
 
   const toggleSelectedItem = (name: string) => {
     if (selectedItemName === name) {
@@ -163,34 +154,22 @@ export const SidePanel: React.FC = () => {
     }),
   ];
 
-  const isDesktopDisplay = useIsWithinBreakpoints(['l', 'xl']);
-
-  let width;
-  if (isDesktopDisplay) {
-    width = isNavOpenOnDesktop ? '35rem' : '0rem';
-  } else {
-    width = '100%';
-  }
-
   const toggleIsNavOpenOnDesktop = () => {
     setIsNavOpenOnDesktop(!isNavOpenOnDesktop);
   };
 
-  sideNav = isNavOpenOnDesktop || !isDesktopDisplay ? sideNav : [];
+  const width = isNavOpenOnDesktop ? '35rem' : '0rem';
+  sideNav = isNavOpenOnDesktop ? sideNav : [];
+
   const transitionModifier = '0.2s ease-out';
 
-  const backgroundImage =
-    isDesktopDisplay || isSideNavOpenOnMobile
-      ? `linear-gradient(to right, ${euiTheme.colors.lightestShade} , transparent)`
-      : 'none';
+  const backgroundImage = `linear-gradient(to right, ${euiTheme.colors.lightestShade} , transparent)`;
 
   return (
     <>
       <EuiSideNav
         aria-label="Drop down"
-        mobileTitle={<SidePanelMobileHeader />}
-        toggleOpenOnMobile={toggleOpenOnMobile}
-        isOpenOnMobile={isSideNavOpenOnMobile}
+        mobileBreakpoints={[]}
         items={sideNav}
         style={{
           width: width,
@@ -206,27 +185,25 @@ export const SidePanel: React.FC = () => {
           transition: 'width ' + transitionModifier,
         }}
       />
-      <EuiShowFor sizes={['m', 'l', 'xl']}>
-        <EuiButtonEmpty
-          id="desktopNavToggle"
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: width,
-            transition: 'left ' + transitionModifier,
-            color: euiTheme.colors.darkestShade,
-            paddingLeft: euiTheme.size.s,
-          }}
-          onClick={toggleIsNavOpenOnDesktop}
-          flush="both"
-          color={'text'}
-        >
-          <EuiIcon
-            type={isNavOpenOnDesktop ? 'menuLeft' : 'menuRight'}
-            size="l"
-          />
-        </EuiButtonEmpty>
-      </EuiShowFor>
+      <EuiButtonEmpty
+        id="desktopNavToggle"
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: width,
+          transition: 'left ' + transitionModifier,
+          color: euiTheme.colors.darkestShade,
+          paddingLeft: euiTheme.size.s,
+        }}
+        onClick={toggleIsNavOpenOnDesktop}
+        flush="both"
+        color={'text'}
+      >
+        <EuiIcon
+          type={isNavOpenOnDesktop ? 'menuLeft' : 'menuRight'}
+          size="l"
+        />
+      </EuiButtonEmpty>
     </>
   );
 };
