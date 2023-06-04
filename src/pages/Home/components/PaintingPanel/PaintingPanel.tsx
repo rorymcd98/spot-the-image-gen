@@ -15,6 +15,7 @@ import {
 } from '@elastic/eui';
 import { css } from '@emotion/react';
 import paintingsLibrary from '../../../../resources/paintingsLibrary';
+import { Finger } from 'react-finger';
 
 export type PaintingPosition = {
   zoomRatio: number;
@@ -133,13 +134,18 @@ const PaintingPanel: React.FC<PaintingPanelProps> = ({
     </h5>,
   ];
 
+  const FingerSpan = Finger('span');
+
   // (dev) could potentially remake this using Eui components
   // Consider seperating into multiple components, and reducing the repeated stylings
   return (
-    <span
+    <FingerSpan
       className="PaintingPanel"
       id={panelId}
       onWheel={zoomPainting}
+      onPinchStart={(e) => console.log(e)}
+      onPinch={(e) => console.log(e)}
+      onPinchEnd={(e) => console.log(e)}
       onMouseMove={followMouseOnPainting}
       css={{
         height: 'auto',
@@ -217,7 +223,7 @@ const PaintingPanel: React.FC<PaintingPanelProps> = ({
                 {(src, loading) => (
                   <img
                     src={src}
-                    onClick={togglePaintingVisible}
+                    onMouseDown={togglePaintingVisible}
                     className="PaintingImg"
                     css={
                       isVertical
@@ -285,7 +291,7 @@ const PaintingPanel: React.FC<PaintingPanelProps> = ({
           </EuiText>
         </EuiPanel>
       )}
-    </span>
+    </FingerSpan>
   );
 };
 export default PaintingPanel;

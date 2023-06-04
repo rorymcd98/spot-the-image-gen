@@ -166,6 +166,7 @@ const Home: React.FC = () => {
           transform: 'translate(-50%, -50%)',
           height: '100%',
           width: '100%',
+          touchAction: 'none',
         })}
       >
         <EuiFlexGroup
@@ -176,6 +177,7 @@ const Home: React.FC = () => {
           css={css({
             width: '100%',
             height: '100%',
+            touchAction: 'none',
           })}
         >
           {panelOne}

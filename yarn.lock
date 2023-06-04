@@ -2275,6 +2275,13 @@ ee-first@1.1.1:
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
+eify@4.0.3:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/eify/-/eify-4.0.3.tgz#e60a3006c96357a930278c142dd8ba47d17d1f01"
+  integrity sha512-hdnI3dBc/eZ5fIkVbrxRHmF2+/oa7L25aUe3NwEno8Q+7VCs2eE2Q2g2X8NTT48u2R0mqTZrIozbb2+i+DZj7g==
+  dependencies:
+    tslib "*"
+
 electron-to-chromium@^1.4.284:
   version "1.4.385"
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.385.tgz#1afd8d6280d510145148777b899ff481c65531ff"
@@ -4824,6 +4831,11 @@ path-type@^4.0.0:
   resolved "https://registry.yarnpkg.com/path-type/-/path-type-4.0.0.tgz#84ed01c0a7ba380afe09d90a8c180dcd9d03043b"
   integrity sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==
 
+pepjs@0.5.3:
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/pepjs/-/pepjs-0.5.3.tgz#dc755f03d965c20e4b1bb65e42a03a97c382cfc7"
+  integrity sha512-5yHVB9OHqKd9fr/OIsn8ss0NgThQ9buaqrEuwr9Or5YjPp6h+WTDKWZI+xZLaBGZCtODTnFtlSHNmhFsq67THg==
+
 performance-now@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
@@ -5159,6 +5171,14 @@ react-element-to-jsx-string@^14.3.4:
     "@base2/pretty-print-object" "1.0.1"
     is-plain-object "5.0.0"
     react-is "17.0.2"
+
+react-finger@^2.2.3:
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/react-finger/-/react-finger-2.2.3.tgz#bac36c63adde4e88e7e63657e89cc790a8c64d3c"
+  integrity sha512-X1ui0zIDQZO96j8jv1mvcOvqdPD9Cb4NbtxH44YsXBDp3ElQVUqNZsR2FJ8Sz64yNj3RrLwt8/Lwf1VNeMDm8w==
+  dependencies:
+    eify "4.0.3"
+    pepjs "0.5.3"
 
 react-focus-lock@^2.9.2:
   version "2.9.4"
@@ -6104,6 +6124,11 @@ trough@^1.0.0:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/trough/-/trough-1.0.5.tgz#b8b639cefad7d0bb2abd37d433ff8293efa5f406"
   integrity sha512-rvuRbTarPXmMb79SmzEp8aqXNKcK+y0XaB298IXueQ8I2PsrATcPBCSPyK/dDNa2iWOhKlfNnOjdAOTBU/nkFA==
+
+tslib@*:
+  version "2.5.3"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.5.3.tgz#24944ba2d990940e6e982c4bea147aba80209913"
+  integrity sha512-mSxlJJwl3BMEQCUNnxXBU9jP4JBktcEGhURcPR6VQVlnP0FdDEsIaz0C35dXNGLyRfrATNofF0F5p2KPxQgB+w==
 
 tslib@^1.8.1, tslib@^1.9.3:
   version "1.14.1"

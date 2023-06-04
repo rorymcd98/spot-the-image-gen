@@ -72,7 +72,7 @@ export const DiffSvg: React.FC<DiffSvgProps> = ({
     stroke: string;
     className: string;
     src: string;
-    onClick: (e: React.MouseEvent) => void;
+    onMouseDown: (e: React.MouseEvent) => void;
     beforeInjection: (svg: SVGElement) => void;
   };
 
@@ -99,7 +99,7 @@ export const DiffSvg: React.FC<DiffSvgProps> = ({
       stroke="yellow"
       className="DiffSvg"
       src={srcPath}
-      onClick={correctClickHandler}
+      onMouseDown={correctClickHandler}
       beforeInjection={styleCallback}
     />
   );
