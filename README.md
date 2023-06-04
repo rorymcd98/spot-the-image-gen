@@ -1,6 +1,6 @@
 <h1 align="center">Spot the Gen</h1>
 
-> An spot the difference game made with React, TypeScript, Elastic UI
+> A spot the difference game using in-painting image generation - made with React, TypeScript, Elastic UI
 
 Available at [spot-the-image.web.app](https://spot-the-image.web.app/)
 
@@ -31,19 +31,23 @@ Utilises:
 
 -   Clone this repoistory
 
+<<<<<<< HEAD
 -   Install (e.g.): `npm install .`
+=======
+* Install (yarn required for ElasticUI): `yarn install`
+>>>>>>> fe638f7b9a41ee26125772db6e3f5d77c3877652
 
 -   For production run:
 
 ```
-npm run build
-npm run start
+yarn build
+yarn start
 ```
 
 -   For development run:
 
 ```
-npm run dev
+yarn dev
 ```
 
 <h4>Potential features:</h4>

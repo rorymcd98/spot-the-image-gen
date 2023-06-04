@@ -17,7 +17,7 @@ const About: React.FC = () => {
             for this project was to:
         </p>,
         <ul>
-            <li>Familiarising with webdev skills in the following stack:</li>
+            <li>Become familiar with webdev skills in the following stack:</li>
             <ul>
                 <li>Typescript</li>
                 <li>React</li>
