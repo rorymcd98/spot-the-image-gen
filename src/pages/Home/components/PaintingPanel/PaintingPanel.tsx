@@ -1,261 +1,314 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react';
 import ProgressiveImage from 'react-progressive-graceful-image';
 
 import { DiffSvg } from './DiffSvg';
-import { usePaintingNameStore, useProgressStore } from '../../../../state-management/Store';
-import { EuiButtonEmpty, EuiIcon, EuiPanel, EuiText, useEuiTheme } from '@elastic/eui';
+import {
+    usePaintingNameStore,
+    useProgressStore,
+} from '../../../../state-management/Store';
+import {
+    EuiButtonEmpty,
+    EuiIcon,
+    EuiPanel,
+    EuiText,
+    useEuiTheme,
+} from '@elastic/eui';
 import { css } from '@emotion/react';
 import paintingsLibrary from '../../../../resources/paintingsLibrary';
 
 export type PaintingPosition = {
-  zoomRatio: number;
-  xFraction: number;
-  yFraction: number;
-}
+    zoomRatio: number;
+    xFraction: number;
+    yFraction: number;
+};
 
 export type PaintingPanelProps = {
-  isDiff: boolean,
-  isVertical: boolean,
-  paintingImgStyle: React.CSSProperties,
-  endGameMaskStyling?: React.CSSProperties,
-  zoomPainting: (e: React.WheelEvent<HTMLSpanElement>) => void,
-  createFollowMouseOnPainting: (panelId: string) => (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => void,
-}
+    isDiff: boolean;
+    isVertical: boolean;
+    paintingImgStyle: React.CSSProperties;
+    endGameMaskStyling?: React.CSSProperties;
+    zoomPainting: (e: React.WheelEvent<HTMLSpanElement>) => void;
+    createFollowMouseOnPainting: (
+        panelId: string
+    ) => (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => void;
+};
 
 //(dev) module is a bit messy, could use some refactoring
-const PaintingPanel: React.FC<PaintingPanelProps> = ({isDiff, isVertical, paintingImgStyle, endGameMaskStyling, zoomPainting, createFollowMouseOnPainting}) => {
-  const {paintingName} = usePaintingNameStore();
-  const {euiTheme} = useEuiTheme();
+const PaintingPanel: React.FC<PaintingPanelProps> = ({
+    isDiff,
+    isVertical,
+    paintingImgStyle,
+    endGameMaskStyling,
+    zoomPainting,
+    createFollowMouseOnPainting,
+}) => {
+    const { paintingName } = usePaintingNameStore();
+    const { euiTheme } = useEuiTheme();
 
-  const panelId = isDiff ? 'panel-2' : 'panel-1';
-  
-  const diffPaintingPath = `paintings/${paintingName}/${paintingName}-diff.png`;
-  const tinyDiffPaintingPath = `paintings/${paintingName}/${paintingName}-diff-tiny.png`;
+    const panelId = isDiff ? 'panel-2' : 'panel-1';
 
-  const normalPaintingPath = `paintings/${paintingName}/${paintingName}.png`;
-  const tinyNormalPaintingPath = `paintings/${paintingName}/${paintingName}-tiny.png`;
+    const diffPaintingPath = `paintings/${paintingName}/${paintingName}-diff.png`;
+    const tinyDiffPaintingPath = `paintings/${paintingName}/${paintingName}-diff-tiny.png`;
 
-  const paintingPath = isDiff ? diffPaintingPath : normalPaintingPath;
-  const tinyPaintingPath = isDiff ? tinyDiffPaintingPath : tinyNormalPaintingPath;
+    const normalPaintingPath = `paintings/${paintingName}/${paintingName}.png`;
+    const tinyNormalPaintingPath = `paintings/${paintingName}/${paintingName}-tiny.png`;
 
-  const diffsPath = `./diff-svgs/`;
+    const paintingPath = isDiff ? diffPaintingPath : normalPaintingPath;
+    const tinyPaintingPath = isDiff
+        ? tinyDiffPaintingPath
+        : tinyNormalPaintingPath;
 
-  const followMouseOnPainting = createFollowMouseOnPainting(panelId);
+    const diffsPath = `./diff-svgs/`;
 
-  //Handle what happens when the painting is complete
-  //The panels appear to merge, main panel becomes toggleable between the 'diff' and ordinary view
-  const {paintings, resetPainting} = useProgressStore();
-  const isComplete = paintings[paintingName].isComplete;
+    const followMouseOnPainting = createFollowMouseOnPainting(panelId);
 
-  const diffSvg = <DiffSvg 
-    key={paintingName + 'diffSvg' + '-' +  panelId}
-    id={paintingName + 'diffSvg' + '-' +  panelId} 
-    srcPath={diffsPath  + 'diff-' + paintingName + '.svg'} 
-    paintingName={paintingName}
-    isComplete={isComplete}
-  />
+    //Handle what happens when the painting is complete
+    //The panels appear to merge, main panel becomes toggleable between the 'diff' and ordinary view
+    const { paintings, resetPainting } = useProgressStore();
+    const isComplete = paintings[paintingName].isComplete;
 
+    const diffSvg = (
+        <DiffSvg
+            key={paintingName + 'diffSvg' + '-' + panelId}
+            id={paintingName + 'diffSvg' + '-' + panelId}
+            srcPath={diffsPath + 'diff-' + paintingName + '.svg'}
+            paintingName={paintingName}
+            isComplete={isComplete}
+        />
+    );
 
-  const midPercent = 25;
-  
-  //function of midpoint
-  const transfromPercent = isDiff ? `-${100-midPercent}%` : `${midPercent}%`; 
-  const transformPainting = isComplete ? `translate${isVertical ? 'Y':'X'}(${transfromPercent})` : ''
+    const midPercent = 25;
 
-  const [endPaintingVisible, setEndPaintingVisible] = useState(true);
+    //function of midpoint
+    const transfromPercent = isDiff
+        ? `-${100 - midPercent}%`
+        : `${midPercent}%`;
+    const transformPainting = isComplete
+        ? `translate${isVertical ? 'Y' : 'X'}(${transfromPercent})`
+        : '';
 
-  const togglePaintingVisible = () => {
-    if (isComplete && !isDiff) {
-      setEndPaintingVisible(!endPaintingVisible);
-    }
-  }
+    const [endPaintingVisible, setEndPaintingVisible] = useState(true);
 
-  const paintingInfo = paintingsLibrary[paintingName];
-  const time = paintings[paintingName].timeSpent_seconds;
-
-  const paintingText = [ 
-    <h4 key={'painting-info-name'}>
-      {paintingInfo.name}
-    </h4>,
-
-    <h5 key={'painting-info-artist'}>
-      {paintingInfo.artist + ' (' + paintingInfo.year + ')'}
-    </h5>,
-
-    <p key={'painting-description'}>
-      {paintingInfo.description}
-    </p>,
-
-    <h5 key={'painting-info-time'} >
-      <EuiIcon type='clock'/> Time taken: {time >= 60 ? Math.floor(time/60) + ':' + (time%60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false}) : time}
-    
-      {'  |  '} 
-      <EuiButtonEmpty
-        size="s"
-        iconType="refresh"
-        css={css({
-          color: euiTheme.colors.subduedText,
-          transform: "translateY(50%)"
-        })}
-        onClick={(e: React.MouseEvent)=>{
-          e.stopPropagation();
-          resetPainting(paintingName);
-        // setEndPaintingVisible(false);
-        }}
-      > 
-      Reset
-      </EuiButtonEmpty>
-    </h5>,
-  ]
-
-  // (dev) could potentially remake this using Eui components
-  return (
-    <span 
-      className='PaintingPanel' 
-      id={panelId} 
-      onWheel={zoomPainting} 
-      onMouseMove={followMouseOnPainting}
-      css ={{
-        height: "auto",
-        maxHeight: "95%",
-        width: "auto",
-        background: euiTheme.colors.darkShade,
-        userSelect: "none",
-        // boxShadow: "inset 10px 10px 10px 10px rgba(0,0,0,0.75)",
-        boxShadow: "2px 3px 5px 5px rgba(0,0,0,0.25)",
-
-        transition: "transform 0.5s ease-in-out, opacity 0.5s ease-in-out",
-        transform: transformPainting,
-        opacity: isDiff && isComplete ? '0%' : '100%',
-        //Critical css for the end of the game
-        zIndex: isDiff && isComplete ? '0' : '1'
-      }}>
-      <div
-        id={panelId+'-painting'}
-        css={css({
-          overflow: "hidden",
-        })
+    const togglePaintingVisible = () => {
+        if (isComplete && !isDiff) {
+            setEndPaintingVisible(!endPaintingVisible);
         }
-      >
-        <div 
-          className='PaintingImgContainer'
-          style={paintingImgStyle}>
-          <ProgressiveImage
-            src={paintingPath}
-            placeholder={tinyPaintingPath}
-          >
-            {(src, loading)=> <img
-              className = 'PaintingImg'
-              src={src}
-              css={isVertical ? {
-                filter: `blur(${loading ? '15' : '0'}px)`,
-                transition : "filter 0.5s ease-in-out",
-                height: "47.5vh",
+    };
 
-                maxHeight: "47.5vh",
-                maxWidth: "95vw",
+    const paintingInfo = paintingsLibrary[paintingName];
+    const time = paintings[paintingName].timeSpent_seconds;
 
-                display: "block",
-              } : {
-                width: "47.5vw",
+    const paintingText = [
+        <h4 key={'painting-info-name'}>{paintingInfo.name}</h4>,
 
-                maxWidth: "47.5vw",
-                maxHeight: "95vh",
+        <h5 key={'painting-info-artist'}>
+            {paintingInfo.artist + ' (' + paintingInfo.year + ')'}
+        </h5>,
 
-                filter: `blur(${loading ? '15' : '0'}px)`,
-                transition : "filter 0.5s ease-in-out",
+        <p key={'painting-description'}>{paintingInfo.description}</p>,
 
-                display: "block",
-              }}
-            />}
-          </ProgressiveImage>
-          {diffSvg}
-          
-          {!isDiff && isComplete && 
-          <div 
-            id='mouse-reveal-container'
-          
-            css={{
-              ...endGameMaskStyling,
-              position: "absolute",
-              top: "0%",
-              display: "block",
-              overflow: "hidden",
-              height: "100%",
-              zIndex: 2,
-            }}>
-            <ProgressiveImage 
-              src={diffPaintingPath}
-              placeholder={tinyDiffPaintingPath}
+        <h5 key={'painting-info-time'}>
+            <EuiIcon type="clock" /> Time taken:{' '}
+            {time >= 60
+                ? Math.floor(time / 60) +
+                  ':' +
+                  (time % 60).toLocaleString('en-US', {
+                      minimumIntegerDigits: 2,
+                      useGrouping: false,
+                  })
+                : time}
+            {'  |  '}
+            <EuiButtonEmpty
+                size="s"
+                iconType="refresh"
+                css={css({
+                    color: euiTheme.colors.subduedText,
+                    transform: 'translateY(50%)',
+                })}
+                onClick={(e: React.MouseEvent) => {
+                    e.stopPropagation();
+                    resetPainting(paintingName);
+                    // setEndPaintingVisible(false);
+                }}
             >
-              {(src, loading)=> <img
-                src={src}
-                onClick={togglePaintingVisible}
-                className = 'PaintingImg'
+                Reset
+            </EuiButtonEmpty>
+        </h5>,
+    ];
 
-                css={
-                  isVertical ? {
-                    position: "absolute",
-                    top: "0%",
-                    display: "block",
-                    height: "47.5vh",
-                    
-                    maxHeight: "47.5vh",
-                    maxWidth: "95vw",
-                    opacity: endPaintingVisible ? '100%' : '0%',
-                    transition: "opacity 0.5s ease-in-out, filter 0.5s ease-in-out",
-                    filter: `blur(${loading ? '15' : '0'}px)`,
-                  } : {
-                    position: "absolute",
-                    top: "0%",
-                    display: "block",
+    // (dev) could potentially remake this using Eui components
+    return (
+        <span
+            className="PaintingPanel"
+            id={panelId}
+            onWheel={zoomPainting}
+            onMouseMove={followMouseOnPainting}
+            css={{
+                height: 'auto',
+                maxHeight: '95%',
+                width: 'auto',
+                background: euiTheme.colors.darkShade,
+                userSelect: 'none',
+                boxShadow: '2px 3px 5px 5px rgba(0,0,0,0.25)',
 
-                    width: "47.5vw",
-                    maxWidth: "47.5vw",
-                    maxHeight: "95vh",
-                    opacity: endPaintingVisible ? '100%' : '0%',
-                    transition: "opacity 0.5s ease-in-out, filter 0.5s ease-in-out",
-                    filter: `blur(${loading ? '15' : '0'}px)`,
-                  }}
-              />}
-            </ProgressiveImage>
-          </div>
-          }
-        </div>
-      </div>
-
-      {!isDiff && isComplete && <EuiPanel
-        css={isVertical ? 
-          css({
-            position: "absolute",
-            bottom: '-'+euiTheme.size.m,
-            transform: "translateY(100%)",
-            width: "100%",
-            height: "auto",
-
-          }) :
-          css({
-            position: "absolute",
-            top: "50%",
-            right: '-'+euiTheme.size.m,
-            transform: "translateX(100%) translateY(-50%)",
-            width: "clamp(15vw, 40rem, 30vw)",
-            height: "auto",
-
-            display: "flex",
-            alignItems: "center",
-          }) 
-        }
-      >
-        <EuiText
-          size= 'm'
-          color='subdued'
+                transition:
+                    'transform 0.5s ease-in-out, opacity 0.5s ease-in-out',
+                transform: transformPainting,
+                opacity: isDiff && isComplete ? '0%' : '100%',
+                //Critical css for the end of the game
+                zIndex: isDiff && isComplete ? '0' : '1',
+            }}
         >
-          {paintingText}
-        </EuiText>
-      </EuiPanel>}
-    </span>
-  )
-}
-export default PaintingPanel;
+            <div
+                id={panelId + '-painting'}
+                css={css({
+                    overflow: 'hidden',
+                })}
+            >
+                <div className="PaintingImgContainer" style={paintingImgStyle}>
+                    <ProgressiveImage
+                        src={paintingPath}
+                        placeholder={tinyPaintingPath}
+                    >
+                        {(src, loading) => (
+                            <img
+                                className="PaintingImg"
+                                src={src}
+                                css={
+                                    isVertical
+                                        ? {
+                                              filter: `blur(${
+                                                  loading ? '15' : '0'
+                                              }px)`,
+                                              transition:
+                                                  'filter 0.5s ease-in-out',
+                                              height: '47.5vh',
 
+                                              maxHeight: '47.5vh',
+                                              maxWidth: '95vw',
+
+                                              display: 'block',
+                                          }
+                                        : {
+                                              width: '47.5vw',
+
+                                              maxWidth: '47.5vw',
+                                              maxHeight: '95vh',
+
+                                              filter: `blur(${
+                                                  loading ? '15' : '0'
+                                              }px)`,
+                                              transition:
+                                                  'filter 0.5s ease-in-out',
+
+                                              display: 'block',
+                                          }
+                                }
+                            />
+                        )}
+                    </ProgressiveImage>
+                    {diffSvg}
+
+                    {!isDiff && isComplete && (
+                        <div
+                            id="mouse-reveal-container"
+                            css={{
+                                ...endGameMaskStyling,
+                                position: 'absolute',
+                                top: '0%',
+                                display: 'block',
+                                overflow: 'hidden',
+                                height: '100%',
+                                zIndex: 2,
+                            }}
+                        >
+                            <ProgressiveImage
+                                src={diffPaintingPath}
+                                placeholder={tinyDiffPaintingPath}
+                            >
+                                {(src, loading) => (
+                                    <img
+                                        src={src}
+                                        onClick={togglePaintingVisible}
+                                        className="PaintingImg"
+                                        css={
+                                            isVertical
+                                                ? {
+                                                      position: 'absolute',
+                                                      top: '0%',
+                                                      display: 'block',
+                                                      height: '47.5vh',
+
+                                                      maxHeight: '47.5vh',
+                                                      maxWidth: '95vw',
+                                                      opacity:
+                                                          endPaintingVisible
+                                                              ? '100%'
+                                                              : '0%',
+                                                      transition:
+                                                          'opacity 0.5s ease-in-out, filter 0.5s ease-in-out',
+                                                      filter: `blur(${
+                                                          loading ? '15' : '0'
+                                                      }px)`,
+                                                  }
+                                                : {
+                                                      position: 'absolute',
+                                                      top: '0%',
+                                                      display: 'block',
+
+                                                      width: '47.5vw',
+                                                      maxWidth: '47.5vw',
+                                                      maxHeight: '95vh',
+                                                      opacity:
+                                                          endPaintingVisible
+                                                              ? '100%'
+                                                              : '0%',
+                                                      transition:
+                                                          'opacity 0.5s ease-in-out, filter 0.5s ease-in-out',
+                                                      filter: `blur(${
+                                                          loading ? '15' : '0'
+                                                      }px)`,
+                                                  }
+                                        }
+                                    />
+                                )}
+                            </ProgressiveImage>
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            {!isDiff && isComplete && (
+                <EuiPanel
+                    css={
+                        isVertical
+                            ? css({
+                                  position: 'absolute',
+                                  bottom: '-' + euiTheme.size.m,
+                                  transform: 'translateY(100%)',
+                                  width: '100%',
+                                  height: 'auto',
+                              })
+                            : css({
+                                  position: 'absolute',
+                                  top: '50%',
+                                  right: '-' + euiTheme.size.m,
+                                  transform:
+                                      'translateX(100%) translateY(-50%)',
+                                  width: 'clamp(15vw, 40rem, 30vw)',
+                                  height: 'auto',
+
+                                  display: 'flex',
+                                  alignItems: 'center',
+                              })
+                    }
+                >
+                    <EuiText size="m" color="subdued">
+                        {paintingText}
+                    </EuiText>
+                </EuiPanel>
+            )}
+        </span>
+    );
+};
+export default PaintingPanel;

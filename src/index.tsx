@@ -5,10 +5,8 @@ import importIcons from './resources/cache-icons.ts';
 
 import StateWrapper from './StateWrapper.tsx';
 
-
 importIcons();
 
-
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <StateWrapper/>
+    <StateWrapper />
 );

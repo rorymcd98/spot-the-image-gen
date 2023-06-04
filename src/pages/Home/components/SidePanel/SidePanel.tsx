@@ -1,181 +1,238 @@
 import React, { ReactElement, useState } from 'react';
-import { EuiButtonEmpty, EuiIcon, EuiSideNav, slugify, useEuiTheme} from '@elastic/eui';
-import paintingLibrary, {PaintingLibrary} from '../../../../resources/paintingsLibrary';
-import { usePaintingNameStore, useProgressStore, useThemeStore } from '../../../../state-management/Store';
+import {
+    EuiButtonEmpty,
+    EuiIcon,
+    EuiShowFor,
+    EuiSideNav,
+    EuiThemeBreakpoints,
+    slugify,
+    useCurrentEuiBreakpoint,
+    useEuiTheme,
+    useIsWithinBreakpoints,
+} from '@elastic/eui';
+import paintingLibrary, {
+    PaintingLibrary,
+} from '../../../../resources/paintingsLibrary';
+import {
+    usePaintingNameStore,
+    useProgressStore,
+    useThemeStore,
+} from '../../../../state-management/Store';
+import SidePanelMobileHeader from './SidePanelMobileHeader';
 
-export const SidePanel: React.FC =  () => {
-  const {euiTheme} = useEuiTheme();
-  
-  const [isNavOpenOnDesktop, setIsNavOpenOnDesktop] = useState(false);
-  const [isSideNavOpenOnMobile, setIsSideNavOpenOnMobile] = useState(false);
-  const [selectedItemName, setSelectedItem] = useState('Paintings');
+export const SidePanel: React.FC = () => {
+    const { euiTheme } = useEuiTheme();
 
-  const toggleOpenOnMobile = () => {
-    setIsSideNavOpenOnMobile(!isSideNavOpenOnMobile);
-  };
+    const [isNavOpenOnDesktop, setIsNavOpenOnDesktop] = useState(false);
+    const [isSideNavOpenOnMobile, setIsSideNavOpenOnMobile] = useState(false);
+    const [selectedItemName, setSelectedItem] = useState('Paintings');
 
-  const toggleSelectedItem = (name: string) => {
-    if (selectedItemName === name) {
-      setSelectedItem('None');
-    } else {
-      setSelectedItem(name);
-    }
-  };
-
-  type Item = {
-    id: string
-    name: string
-    isSelected: boolean
-    onClick: () => void
-  }
-
-  type ItemData = {
-    style?: React.CSSProperties
-    icon?: ReactElement
-    disabled?: boolean
-    href?: string
-    items?: Item[]
-    onClick?: () => void
-  }
-
-  //(dev) try get rid of any
-  const createItem = (name: string, data: ItemData = {} ) => {
-    let baseCss = {
-      color: euiTheme.colors.text,
+    const toggleOpenOnMobile = () => {
+        setIsSideNavOpenOnMobile(!isSideNavOpenOnMobile);
     };
 
-    if (data.style) {
-      baseCss = {
-        ...baseCss,
-        ...data.style,
-      }
-    }
-  
-    return {
-      id: slugify(name),
-      name,
-      isSelected: selectedItemName === name,
-      onClick: () => toggleSelectedItem(name),
-      ...data,
-      css: {
-        ...baseCss,
-      },
+    const toggleSelectedItem = (name: string) => {
+        if (selectedItemName === name) {
+            setSelectedItem('None');
+        } else {
+            setSelectedItem(name);
+        }
     };
-  };
 
-  const {paintingName: currentPaintingName, setPaintingName} = usePaintingNameStore();
-  const {paintings} = useProgressStore();
+    type Item = {
+        id: string;
+        name: string;
+        isSelected: boolean;
+        onClick: () => void;
+    };
 
-  const createPaintingItemList = (paintingLibrary: PaintingLibrary) => {
-    const paintingItemList = [];
+    type ItemData = {
+        style?: React.CSSProperties;
+        icon?: ReactElement;
+        disabled?: boolean;
+        href?: string;
+        items?: Item[];
+        onClick?: () => void;
+    };
 
-    for (const paintingName in paintingLibrary) {
-      const paintingIsComplete = paintings[paintingName].isComplete;
-      let fullPaintingName = paintingLibrary[paintingName].name;
-      if (paintingIsComplete) {
-        const completedTime = paintings[paintingName].timeSpent_seconds;
-        fullPaintingName += completedTime >= 60 ? ' (' + Math.floor(completedTime/60) + ':' + (completedTime%60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false}) + ')' : ' (' + completedTime + ')';
-      }
-      const completeIcon = paintingIsComplete ? <EuiIcon type="check" color='success'/> : <EuiIcon type="empty" color='text'/>;
-      paintingItemList.push(
-        createItem(fullPaintingName,
-          {
-            onClick: () => {
-              setPaintingName(paintingName);
+    //(dev) try get rid of any
+    const createItem = (name: string, data: ItemData = {}) => {
+        let baseCss = {
+            color: euiTheme.colors.text,
+        };
+
+        if (data.style) {
+            baseCss = {
+                ...baseCss,
+                ...data.style,
+            };
+        }
+
+        return {
+            id: slugify(name),
+            name,
+            isSelected: selectedItemName === name,
+            onClick: () => toggleSelectedItem(name),
+            ...data,
+            css: {
+                ...baseCss,
             },
-            disabled: paintingName === currentPaintingName,
-            icon: completeIcon,
-          }
-        ));
-    }
-    return paintingItemList;
-  };
+        };
+    };
 
-  const paintingItemList = createPaintingItemList(paintingLibrary);
+    const { paintingName: currentPaintingName, setPaintingName } =
+        usePaintingNameStore();
+    const { paintings } = useProgressStore();
 
-  const {theme, toggleTheme} = useThemeStore();
+    const createPaintingItemList = (paintingLibrary: PaintingLibrary) => {
+        const paintingItemList = [];
 
-  const {resetAllPaintings} = useProgressStore();
+        for (const paintingName in paintingLibrary) {
+            const paintingIsComplete = paintings[paintingName].isComplete;
+            let fullPaintingName = paintingLibrary[paintingName].name;
+            if (paintingIsComplete) {
+                const completedTime = paintings[paintingName].timeSpent_seconds;
+                fullPaintingName +=
+                    completedTime >= 60
+                        ? ' (' +
+                          Math.floor(completedTime / 60) +
+                          ':' +
+                          (completedTime % 60).toLocaleString('en-US', {
+                              minimumIntegerDigits: 2,
+                              useGrouping: false,
+                          }) +
+                          ')'
+                        : ' (' + completedTime + ')';
+            }
+            const completeIcon = paintingIsComplete ? (
+                <EuiIcon type="check" color="success" />
+            ) : (
+                <EuiIcon type="empty" color="text" />
+            );
+            paintingItemList.push(
+                createItem(fullPaintingName, {
+                    onClick: () => {
+                        setPaintingName(paintingName);
+                    },
+                    disabled: paintingName === currentPaintingName,
+                    icon: completeIcon,
+                })
+            );
+        }
+        return paintingItemList;
+    };
 
-  const confirmResetProgress = () => {
-    if (window.confirm('Are you sure? This will reset progress on all paintings.')) {
-      resetAllPaintings();
-    }
-  }
+    const paintingItemList = createPaintingItemList(paintingLibrary);
 
+    const { theme, toggleTheme } = useThemeStore();
 
-  let sideNav = [
-    createItem('Paintings', {
-      onClick: () => toggleSelectedItem('Paintings'),
-      icon: <EuiIcon type="image" color='text'/>,
-      items: selectedItemName == 'Paintings' ? paintingItemList : [],
-    }),
-    createItem('Settings', {
-      onClick: () => toggleSelectedItem('Settings'), 
-      icon: <EuiIcon type="gear"/>,
-      items: [
-        createItem(theme == 'dark' ? 'Light Mode' : 'Dark Mode', {
-          onClick: toggleTheme,
-          icon: theme == 'dark' ? <EuiIcon type="sun"/> : <EuiIcon type="moon"/>,
+    const { resetAllPaintings } = useProgressStore();
+
+    const confirmResetProgress = () => {
+        if (
+            window.confirm(
+                'Are you sure? This will reset progress on all paintings.'
+            )
+        ) {
+            resetAllPaintings();
+        }
+    };
+
+    let sideNav = [
+        createItem('Paintings', {
+            onClick: () => toggleSelectedItem('Paintings'),
+            icon: <EuiIcon type="image" color="text" />,
+            items: selectedItemName == 'Paintings' ? paintingItemList : [],
         }),
-        createItem('Reset all progress', {
-          onClick: confirmResetProgress,
-          icon: <EuiIcon type="refresh"/>,
-        })
-      ],
-    }),
-    createItem('About', {
-      href: './about',
-      icon: <EuiIcon type="questionInCircle"/>,
-    }),
-  ];
+        createItem('Settings', {
+            onClick: () => toggleSelectedItem('Settings'),
+            icon: <EuiIcon type="gear" />,
+            items: [
+                createItem(theme == 'dark' ? 'Light Mode' : 'Dark Mode', {
+                    onClick: toggleTheme,
+                    icon:
+                        theme == 'dark' ? (
+                            <EuiIcon type="sun" />
+                        ) : (
+                            <EuiIcon type="moon" />
+                        ),
+                }),
+                createItem('Reset all progress', {
+                    onClick: confirmResetProgress,
+                    icon: <EuiIcon type="refresh" />,
+                }),
+            ],
+        }),
+        createItem('About', {
+            href: './about',
+            icon: <EuiIcon type="questionInCircle" />,
+        }),
+    ];
 
-  const width = isNavOpenOnDesktop ? '35rem' : '0rem';
+    const isDesktopDisplay = useIsWithinBreakpoints(['l', 'xl']);
 
-  const toggleIsNavOpenOnDesktop = () => {
-    setIsNavOpenOnDesktop(!isNavOpenOnDesktop);
-  };
+    let width;
+    if (isDesktopDisplay) {
+        width = isNavOpenOnDesktop ? '35rem' : '0rem';
+    } else {
+        width = '100%';
+    }
 
-  sideNav = isNavOpenOnDesktop ? sideNav : []
-  const transitionModifier = '0.2s ease-out';
+    const toggleIsNavOpenOnDesktop = () => {
+        setIsNavOpenOnDesktop(!isNavOpenOnDesktop);
+    };
 
-  return (
-    <>
-      <EuiSideNav
-        aria-label="Complex example"
-        mobileTitle="Navigate within $APP_NAME"
-        toggleOpenOnMobile={toggleOpenOnMobile}
-        isOpenOnMobile={isSideNavOpenOnMobile}
-        items={sideNav}        
-        style={{
-          width: width,
-          position: 'absolute',
-          left: 0,
-          top: 0,
-          height: '100%',
-          paddingLeft: euiTheme.size.s,
-          color: euiTheme.colors.text,
-          
-          backgroundImage: `linear-gradient(to right, ${euiTheme.colors.lightestShade} , transparent)`,
-          transition: 'width ' + transitionModifier
-        }}
-      />
-      
-      <EuiButtonEmpty
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: width,
-          transition: 'left ' + transitionModifier,
-          color: euiTheme.colors.darkestShade,
-          paddingLeft: euiTheme.size.s,
-        }}
-        onClick={toggleIsNavOpenOnDesktop}
-        flush="both"
-        color={"text"}
-      >
-        <EuiIcon type={isNavOpenOnDesktop ? 'menuLeft' : 'menuRight'} size='l'/>
-      </EuiButtonEmpty>
-    </>
-  );
+    sideNav = isNavOpenOnDesktop || !isDesktopDisplay ? sideNav : [];
+    const transitionModifier = '0.2s ease-out';
+
+    const backgroundImage =
+        isDesktopDisplay || isSideNavOpenOnMobile
+            ? `linear-gradient(to right, ${euiTheme.colors.lightestShade} , transparent)`
+            : 'none';
+
+    return (
+        <>
+            <EuiSideNav
+                aria-label="Drop down"
+                mobileTitle={<SidePanelMobileHeader />}
+                toggleOpenOnMobile={toggleOpenOnMobile}
+                isOpenOnMobile={isSideNavOpenOnMobile}
+                items={sideNav}
+                style={{
+                    width: width,
+                    display: 'block',
+                    position: 'absolute',
+                    left: 0,
+                    top: 0,
+                    height: '100%',
+                    paddingLeft: euiTheme.size.s,
+                    color: euiTheme.colors.text,
+
+                    backgroundImage,
+                    transition: 'width ' + transitionModifier,
+                }}
+            />
+            <EuiShowFor sizes={['m', 'l', 'xl']}>
+                <EuiButtonEmpty
+                    id="desktopNavToggle"
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: width,
+                        transition: 'left ' + transitionModifier,
+                        color: euiTheme.colors.darkestShade,
+                        paddingLeft: euiTheme.size.s,
+                    }}
+                    onClick={toggleIsNavOpenOnDesktop}
+                    flush="both"
+                    color={'text'}
+                >
+                    <EuiIcon
+                        type={isNavOpenOnDesktop ? 'menuLeft' : 'menuRight'}
+                        size="l"
+                    />
+                </EuiButtonEmpty>
+            </EuiShowFor>
+        </>
+    );
 };
