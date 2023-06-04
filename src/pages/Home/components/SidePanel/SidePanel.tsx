@@ -2,7 +2,6 @@ import React, { ReactElement, useState } from 'react';
 import {
   EuiButtonEmpty,
   EuiIcon,
-  EuiShowFor,
   EuiSideNav,
   slugify,
   useEuiTheme,

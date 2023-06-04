@@ -21,7 +21,7 @@ export const Counters: React.FC<CountersProps> = ({ isVertical }) => {
   const baseCss = {
     background: euiTheme.colors.primary,
     borderRadius: euiTheme.border.radius.medium,
-    opacity: isComplete ? '37%' : '100%',
+    opacity: isComplete ? '25%' : '75%',
   };
 
   const verticalCss = css({
