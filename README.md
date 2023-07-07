@@ -31,7 +31,7 @@ Utilises:
 
 - Clone this repoistory
 
-- # Install (e.g.): `npm install .`
+- Install (e.g.): `npm install .`
 
 * Install (yarn required for ElasticUI): `yarn install`
 
