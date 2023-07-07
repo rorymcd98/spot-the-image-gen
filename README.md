@@ -31,12 +31,9 @@ Utilises:
 
 - Clone this repoistory
 
-<<<<<<< HEAD
-
 - # Install (e.g.): `npm install .`
 
 * Install (yarn required for ElasticUI): `yarn install`
-  > > > > > > > fe638f7b9a41ee26125772db6e3f5d77c3877652
 
 - For production run:
 
